@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <!-- this is the file copied from mapbox when you publish the map -->
+
+<head>
+  <meta charset='utf-8' />
+  <title>Display a map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='map'></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaHdiZWxsIiwiYSI6ImNqdXU4OXY2YjA4cWU0NGxsZzFlYWdobmwifQ.nnjWcSrzbW4o3oq-QYOXhg';
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/hwbell/cjuvfzqlt4h141fomxbjysorm',
+      center: [-119.895222, 48.966052],
+      zoom: 5.3
+    });
+  </script>
+
+</body>
+
+</html>
