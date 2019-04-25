@@ -83,7 +83,7 @@ class App extends Component {
       container: 'map',
       center: [lng, lat],
       zoom: 5,
-      style: 'mapbox://styles/mapbox/streets-v11',
+      style: 'mapbox://styles/hwbell/cjuvfzqlt4h141fomxbjysorm',
     });
 
     map.on('mousemove', function (e) {

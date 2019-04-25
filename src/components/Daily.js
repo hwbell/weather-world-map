@@ -54,12 +54,12 @@ class Hourly extends Component {
     let hourlyContainers = this.props.weatherList.map((weather, i) => {
 
       let style = {
-        minWidth: '240px',
-        height: '350px',
+        minWidth: '200px',
+        height: '300px',
         backgroundColor: '#' + myRainbow.colourAt(weather.temperatureHigh),
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         alignItems: 'center'
       }
 
@@ -67,8 +67,7 @@ class Hourly extends Component {
         <Div key={i} className="" style={style}>
 
           {/* the timestamp */}
-          <div className="row" style={styles.footer}>
-            <p style={styles.text}>{weather.time}</p>
+          <div className="text-center row" style={styles.date}>
             <p style={styles.text}>{weather.date}</p>
           </div>
 
@@ -103,7 +102,7 @@ class Hourly extends Component {
         {/* <p style={styles.title}>daily</p> */}
 
         <div className="row">
-          <HorizontalScroller>
+          <HorizontalScroller style={styles.scroller}>
             {this.props.weatherList &&
               this.renderWeatherInfo()
             }
@@ -118,39 +117,43 @@ class Hourly extends Component {
 
 const styles = {
   container: {
-    margin: '10px',
+    // margin: '10px',
+  },
+  scroller: {
+    margin: '0px',
+    padding: '0px'
   },
   title: {
     margin: '5px',
-    fontSize: 'calc(12px + 1vw )'
+    fontSize: '12px',
+    alignSelf: 'flex-start'
   },
   icon: {
-    fontSize: '55px',
-    color: 'rbga(255, 255, 255, 0.5)',
+    fontSize: '45px',
     padding: 10,
     paddingTop: 5
   },
   highTempText: {
-    fontSize: 'calc(18px + 1vw)'
+    fontSize: '24px'
   },
   lowTempText: {
-    fontSize: 'calc(12px + 1vw)'
+    fontSize: '18px'
   },
-  footer: {
-    alignSelf: 'flex-start',
-    margin: '0.5vw'
+  date: {
+    marginTop: '10px'
   },
   text: {
     textAlign: 'center',
     minWidth: '50px',
     paddingHorizontal: 10,
-    fontSize: 'calc(12px + 1vw)',
+    fontSize: '18px',
     fontWeight: 'bold'
   },
   paragraph: {
     textAlign: 'left',
     margin: '8px',
-    fontSize: 'calc(10px + 1vw)',
+    alignSelf: 'flex-end',
+    fontSize: '16px',
   }
 }
 

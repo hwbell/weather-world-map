@@ -44,7 +44,11 @@ class CurrentConditions extends Component {
         <div className="col">
           <i style={styles.icon} className={iconClass + ' col'}></i>
 
-          <p style={styles.temperature}>{weather.temperature} &deg;F</p>
+          <div className="row">
+            <p style={styles.temperature}>{weather.temperature}</p>
+            <p style={styles.degree}>&deg;F</p>
+          </div>
+
         </div>
 
         <div className="col">
@@ -53,7 +57,7 @@ class CurrentConditions extends Component {
         </div>
 
         <div className="col">
-          <p style={styles.paragraph}>{` @ ${weather.time}`}</p>
+          <p style={styles.paragraph}>{`${weather.time}`}</p>
           <p style={styles.paragraph}>{`${weather.date}`}</p>
         </div>
 
@@ -69,11 +73,15 @@ const styles = {
   },
   icon: {
     fontSize: '60px',
-    padding: '10px'
+    padding: 0
   },
   temperature: {
-    fontSize: 'calc(34px + 1vw)',
-    marginHorizontal: '20px'
+    fontSize: '40px',
+    margin: '15px',
+  },
+  degree: {
+    paddingTop: '10px',
+    fontSize: '20px'
   },
   paragraph: {
     color: 'whitesmoke',

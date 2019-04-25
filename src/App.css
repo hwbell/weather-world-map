@@ -1,12 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand');
 
 * {
-  font-family: Manjari;
+  font-family: Quicksand;
   color: whitesmoke;
 }
 
-.fa .fas .fab {
-  font-size: 55px;
+a {
+  text-decoration: none;
 }
+
 .App {
   text-align: center;
 }

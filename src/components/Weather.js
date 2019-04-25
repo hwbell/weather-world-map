@@ -27,8 +27,12 @@ const P = posed.div({
   visible: { opacity: 1 }
 });
 
-// getCurrentData() gets condensed info from res.currently
-// we'll pass in res.currently from the darksky res
+// need an array of Months and Days to get names
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+// getCurrentData() gets condensed info for the CurrentConditions component, 
+// from res.currently we'll pass in res.currently from the darksky res
 const getCurrentData = (currentData) => {
 
   // Dark Sky API makes this pretty convenient
@@ -36,9 +40,9 @@ const getCurrentData = (currentData) => {
   // get the date from the provided unix time 
   const time = new Date(currentData.time * 1000);
 
-  let year = time.getFullYear().toString().slice(2, 4);
+  let year = time.getFullYear().toString();
   let date = time.getDate();
-  let month = time.getMonth();
+  let month = months[time.getMonth()];
 
   let hours = time.getHours() > 12 ? time.getHours() - 11 : time.getHours() + 1;
   let minutes = time.getMinutes() < 10 ? '0' + time.getMinutes.toString() : time.getMinutes();
@@ -49,8 +53,8 @@ const getCurrentData = (currentData) => {
   return {
     humidity, icon, summary, uvIndex, windSpeed,
     temperature: Math.floor(temperature),
-    time: `${hours} ${notation}`,
-    date: `${month + 1} - ${date} - ${year}`
+    time: `${hours}:00 ${notation}`,
+    date: `${month} ${date}, ${year}`
   };
 }
 
@@ -67,7 +71,7 @@ const makeHourlyList = (hourlyData) => {
 
     let year = time.getFullYear().toString().slice(0, 2);
     let date = time.getDate();
-    let month = time.getMonth();
+    let month = months[time.getMonth()];
 
     let hours = time.getHours() > 12 ? time.getHours() - 11 : time.getHours() + 1;
     let notation = time.getHours() > 10 ? ' pm' : ' am';
@@ -77,7 +81,7 @@ const makeHourlyList = (hourlyData) => {
       icon: hour.icon,
       temp: Math.floor(hour.temperature),
       time: `${hours} ${notation}`,
-      date: `${month + 1} / ${date} / ${year}` // need to correct for the api's month array
+      date: `${month} ${date}` // need to correct for the api's month array
     });
 
   });
@@ -96,9 +100,10 @@ const makeDailyList = (dailyData) => {
     // get the date from the provided unix time 
     const time = new Date(day.time * 1000);
 
-    // let year = time.getFullYear().toString().slice(0, 2);
+    let year = time.getFullYear().toString();
     let date = time.getDate();
-    let month = time.getMonth();
+    let month = months[time.getMonth()];
+    let weekday = days[time.getDay()]; 
 
     let {
       temperatureHigh,
@@ -116,7 +121,7 @@ const makeDailyList = (dailyData) => {
       humidity,
       icon,
       windSpeed,
-      date: `${month + 1}-${date}` // need to correct for the api's month array
+      date: `${weekday}, ${month} ${date}` // need to correct for the api's month array
     });
 
   });
@@ -132,12 +137,22 @@ class Weather extends Component {
 
     super(props);
     this.state = {
-      //
+      showDaily: true,
+      showHourly: false
     }
+    this.handleSwitch = this.handleSwitch.bind(this);
   }
 
   componentDidMount() {
 
+  }
+
+  // for the toggle between hourly and daily
+  handleSwitch () {
+    this.setState({ 
+      showDaily: !this.state.showDaily,
+      showHourly: !this.state.showHourly
+    })
   }
 
   render() {
@@ -171,11 +186,19 @@ class Weather extends Component {
         {/* short summary */}
         <p style={styles.subtitle}>{this.props.summary}</p>
 
+        {/* the selestor for hourly / daily */}
+        <Button color="link" style={styles.switchButton}
+          onClick={this.handleSwitch}
+        >
+          switch to {this.state.showHourly ? 'daily' : 'hourly'}
+        </Button>
+
+
         {/* the hourly weather tabs  */}
-        {/* <Hourly weatherList={hourlyWeather}/> */}
+        { this.state.showHourly && <Hourly weatherList={hourlyWeather}/>}
 
         {/* the daily weather tabs */}
-        <Daily weatherList={dailyWeather} />
+        { this.state.showDaily && <Daily weatherList={dailyWeather} />}
 
       </Div>
     );
@@ -205,6 +228,12 @@ const styles = {
     color: 'whitesmoke',
     fontSize: 'calc(10px + 1vw)',
     marginLeft: '10vw' 
+  },
+  switchButton: {
+    textDecoration: 'none',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    marginLeft: '10vw'
   }
 }
 
