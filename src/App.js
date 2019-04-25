@@ -10,6 +10,8 @@ import Weather from './components/Weather';
 
 // tools
 import mapboxgl from 'mapbox-gl';
+
+
 const openGeocoder = require('node-open-geocoder');
 const fetch = require('node-fetch');
 
@@ -41,7 +43,7 @@ class App extends Component {
   // weather window
   toggleShowWeather() {
     this.setState({
-      showWeather: !this.state.showWeather
+      showWeather: false
     })
   }
 
@@ -137,22 +139,22 @@ class App extends Component {
     return (
       <div style={styles.container}>
 
-        <div id='map' style={{ width: '800px', height: '500px' }}>
+        <div id='map' style={{ width: '100vw', height: '100vh' }}>
 
           {/* shows after 2000ms */}
           {this.state.coords && <Intro />}
 
-        </div>
-
-        <div>
+       </div>
+       <div>
           {/* shows when the user clicks on the map */}
           {this.state.showWeather &&
             <Weather
               location={this.state.location}
+              summary={this.state.weatherData.daily.summary}
               weatherData={this.state.weatherData}
               coords={this.state.weatherCoords}
               showWeather={this.state.showWeather}
-              toggle={this.toggleShowWeather}
+              close={this.toggleShowWeather}
             />}
         </div>
 
@@ -163,7 +165,7 @@ class App extends Component {
 
 const styles = {
   container: {
-    margin: '3vw 3vh'
+    // margin: '3vw 3vh'
   }
 }
 

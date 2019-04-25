@@ -1,8 +1,12 @@
 
 * {
-  font-family: Manjari
+  font-family: Manjari;
+  color: whitesmoke;
 }
 
+.fa .fas .fab {
+  font-size: 55px;
+}
 .App {
   text-align: center;
 }

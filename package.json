@@ -8,6 +8,7 @@
     "mapbox-gl": "^0.53.1",
     "node-fetch": "^2.3.0",
     "node-open-geocoder": "^3.0.0",
+    "rainbowvis.js": "^1.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-horizontal-scroll-container": "^1.0.1",

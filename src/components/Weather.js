@@ -7,7 +7,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 // components
 import { Button } from 'reactstrap';
 import Hourly from './Hourly';
-
+import Daily from './Daily'
+;
 // animation with pose
 import posed from 'react-pose';
 
@@ -32,22 +33,22 @@ const makeHourlyList = (hourlyData) => {
   // Dark Sky API makes this pretty convenient
 
   let condensedList = []; // we'll make a simple array for the days forecasted
-  hourlyData.forEach((day) => {
+  hourlyData.forEach((hour) => {
     // get the date from the provided unix time 
-    const time = new Date(day.time * 1000);
+    const time = new Date(hour.time * 1000);
 
     // let year = time.getFullYear().toString().slice(0, 2);
     let date = time.getDate();
     let month = time.getMonth();
 
-    let hour = time.getHours(); 
-    let minutes = time.getMinutes();
+    let hours = time.getHours() > 12 ? time.getHours() - 11 : time.getHours() + 1;
+    let notation = time.getHours() > 10 ? ' pm' : ' am';
 
     condensedList.push({
-      desc: day.summary,
-      icon: day.icon,
-      temp: day.temperature,
-      time: `${hour}: ${minutes}`,
+      desc: hour.summary,
+      icon: hour.icon,
+      temp: Math.floor(hour.temperature),
+      time: `${hours} ${notation}`,
       date: `${month + 1}-${date}` // need to correct for the api's month array
     });
 
@@ -55,6 +56,47 @@ const makeHourlyList = (hourlyData) => {
 
   return condensedList;
 }
+
+// makeHourlyList() gets condensed info hourly info from the main response's hourly data
+// we'll pass in res.daily from the darksky res
+const makeDailyList = (dailyData) => {
+
+  // Dark Sky API makes this pretty convenient
+
+  let condensedList = []; // we'll make a simple array for the days forecasted
+  dailyData.forEach((day) => {
+    // get the date from the provided unix time 
+    const time = new Date(day.time * 1000);
+
+    // let year = time.getFullYear().toString().slice(0, 2);
+    let date = time.getDate();
+    let month = time.getMonth();
+
+    let { 
+      temperatureHigh, 
+      temperatureLow, 
+      summary, 
+      humidity,
+      icon,
+      windSpeed, 
+    } = day;
+    
+    condensedList.push({
+      temperatureHigh: Math.floor(temperatureHigh), 
+      temperatureLow: Math.floor(temperatureLow), 
+      summary, 
+      humidity,
+      icon,
+      windSpeed,
+      date: `${month + 1}-${date}` // need to correct for the api's month array
+    });
+
+  });
+
+  return condensedList;
+}
+
+
 
 class Weather extends Component {
 
@@ -72,19 +114,27 @@ class Weather extends Component {
 
   render() {
     const isVisible = this.props.showWeather;
+    const data = this.props.weatherData;
 
-    // let { lat, lng } = this.props.coords;
-    let hourlyWeather = makeHourlyList(this.props.weatherData.hourly.data);
-    console.log(this.props.hourlyData)
+    // make condensed lists to pass to the Hourly and Daily components
+    let hourlyWeather = makeHourlyList(data.hourly.data);
+
+    // only pass the first 10 days, this list is really long
+    let dailyWeather = makeDailyList(data.daily.data).slice(0, 10);
 
     return (
       <Div pose={isVisible ? 'visible' : 'hidden'} style={styles.container}>
 
-        <Button onClick={this.props.toggle} className="float-right">
+        <Button onClick={this.props.close} className="float-right">
           <i className="fas fa-times-circle"></i>
         </Button>
 
-        <Hourly weatherList={hourlyWeather}/>
+        <p style={styles.title}>{this.props.location}</p>
+        <p style={styles.subtitle}>{this.props.summary}</p>
+
+        {/* <Hourly weatherList={hourlyWeather}/> */}
+
+        <Daily weatherList={dailyWeather}/>
 
       </Div>
     );
@@ -93,7 +143,24 @@ class Weather extends Component {
 
 const styles = {
   container: {
-    backgroundColor: 'rgba(255,255,255,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.75)',
+    zIndex: 1,
+    position: 'absolute',
+    bottom: '0px',
+    width: '100%',
+    
+    // right: '10%'
+  },
+  title: {
+    // border: '1px solid black',
+    color: 'whitesmoke',
+    fontSize: 'calc(14px + 1vw)',
+    padding: 10
+  },
+  subtitle: {
+    color: 'whitesmoke',
+    fontSize: 'calc(10px + 1vw)',
+    padding: 10
   }
 }
 

@@ -46,16 +46,21 @@ class Hourly extends Component {
     var myRainbow = new Rainbow();
 
     // make a spectrum based on the first temp in the list
-    let temp = this.props.weatherList[0].temp;
+    let temp = this.props.weatherList[0].temperatureHigh;
     // set range based on data
-    myRainbow.setNumberRange(15,95); 
-    myRainbow.setSpectrum('#1976D2', '#FF5722');
+    myRainbow.setNumberRange(15, 95);
+    myRainbow.setSpectrum('#303F9F', '#FF5722');
 
     let hourlyContainers = this.props.weatherList.map((weather, i) => {
 
       let style = {
-        minWidth: '140px',
-        backgroundColor: '#' + myRainbow.colourAt(weather.temp)
+        minWidth: '240px',
+        height: '350px',
+        backgroundColor: '#' + myRainbow.colourAt(weather.temperatureHigh),
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
       }
 
       return (
@@ -67,12 +72,13 @@ class Hourly extends Component {
               <i style={styles.icon} className={getWeatherIcon(weather.icon)}></i>
             </div>
             <div className="col">
-              <p style={styles.text}>{weather.temp} &deg;F</p>
+              <p style={styles.highTempText}>{weather.temperatureHigh} &deg;F</p>
+              <p style={styles.lowTempText}>{weather.temperatureLow} &deg;F</p>
             </div>
           </div>
 
           {/* the timestamp */}
-          <div className="">
+          <div className="row">
             <p style={styles.text}>{weather.time}</p>
             <p style={styles.text}>{weather.date}</p>
           </div>
@@ -90,7 +96,7 @@ class Hourly extends Component {
     return (
       <Container className="" style={styles.container}>
 
-        {/* <p style={styles.title}>hourly</p> */}
+        {/* <p style={styles.title}>daily</p> */}
 
         <div className="row">
           <HorizontalScroller>
@@ -108,26 +114,33 @@ class Hourly extends Component {
 
 const styles = {
   container: {
-    padding: '0px',
-    margin: '15px'
+    margin: '10px',
   },
-
   title: {
     margin: 5,
     fontSize: 'calc(12px + 1vw )'
   },
   icon: {
-    fontSize: '50px',
-    textAlign: 'center',
-    padding: '15px',
-    paddingTop: '5px'
+    fontSize: '55px',
+    color: 'rbga(255, 255, 255, 0.5)',
+    padding: 10,
+    paddingTop: 5
+  },
+  highTempText: {
+    fontSize: 'calc(18px + 1vw)'
+  },
+  lowTempText: {
+    fontSize: 'calc(12px + 1vw)'
   },
   text: {
+    position: 'absolute',
+    bottom: 5,
     textAlign: 'center',
     minWidth: '50px',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    fontSize: 'calc(12px + 1vw)',
+    fontWeight: 'bold'
   }
-
 }
 
 export default Hourly;
