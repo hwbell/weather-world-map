@@ -66,6 +66,12 @@ class Hourly extends Component {
       return (
         <Div key={i} className="" style={style}>
 
+          {/* the timestamp */}
+          <div className="row" style={styles.footer}>
+            <p style={styles.text}>{weather.time}</p>
+            <p style={styles.text}>{weather.date}</p>
+          </div>
+
           {/* the temp and icon */}
           <div className="row">
             <div className="col">
@@ -77,11 +83,9 @@ class Hourly extends Component {
             </div>
           </div>
 
-          {/* the timestamp */}
-          <div className="row">
-            <p style={styles.text}>{weather.time}</p>
-            <p style={styles.text}>{weather.date}</p>
-          </div>
+          <p style={styles.paragraph}>
+            {weather.summary}
+          </p>
 
         </Div>
       )
@@ -117,7 +121,7 @@ const styles = {
     margin: '10px',
   },
   title: {
-    margin: 5,
+    margin: '5px',
     fontSize: 'calc(12px + 1vw )'
   },
   icon: {
@@ -132,14 +136,21 @@ const styles = {
   lowTempText: {
     fontSize: 'calc(12px + 1vw)'
   },
+  footer: {
+    alignSelf: 'flex-start',
+    margin: '0.5vw'
+  },
   text: {
-    position: 'absolute',
-    bottom: 5,
     textAlign: 'center',
     minWidth: '50px',
     paddingHorizontal: 10,
     fontSize: 'calc(12px + 1vw)',
     fontWeight: 'bold'
+  },
+  paragraph: {
+    textAlign: 'left',
+    margin: '8px',
+    fontSize: 'calc(10px + 1vw)',
   }
 }
 
