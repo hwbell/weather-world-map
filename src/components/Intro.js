@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import '../App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
+// animation with pose
 import posed from 'react-pose';
 
 // use react-pose for fading in
@@ -34,19 +35,12 @@ class Intro extends Component {
 
   render() {
     const isVisible = this.state.isVisible;
-    const lat = Math.round(this.props.coords.lat * 100) / 100;
-    const lng = Math.round(this.props.coords.lng * 100) / 100;
-
-    console.log(this.props.coords)
+    
     return (
       <Div pose={isVisible ? 'visible' : 'hidden'} style={styles.container}>
-        <P style={styles.title}>Welcome</P>
+        
+        <P style={styles.title}>Weather across the World</P>
         <P style={styles.subtitle}>take a look around</P>
-
-        <div className="" style={styles.coordsHolder}>
-          <p style={styles.coords}>{`latitude: ${lat}`}</p>
-          <p style={styles.coords}>{`longitude: ${lng}`}</p>
-        </div>
 
       </Div>
     );
@@ -63,14 +57,14 @@ const styles = {
   title: {
     margin: '20px',
     marginTop: '0px',
-    color: 'blue',
+    color: 'black',
     fontWeight: 'bold',
-    fontSize: 'calc(30px + 2vw)'
+    fontSize: 'calc(20px + 2vw)'
   },
   subtitle: {
     margin: '30px',
-    color: 'black',
-    fontSize: 'calc(16px + 2vw)'
+    color: '#425E70',
+    fontSize: 'calc(14px + 2vw)'
   },
   coordsHolder: {
     margin: '30px'
