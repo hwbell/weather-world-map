@@ -6,9 +6,13 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 // components
 import { Button } from 'reactstrap';
+import Hourly from './Hourly';
 
 // animation with pose
 import posed from 'react-pose';
+
+// tools
+import { weatherImageList, getWeatherIcon } from '../tools/weatherImages';
 
 // use react-pose for fading in
 const Div = posed.div({
@@ -21,9 +25,36 @@ const P = posed.div({
   visible: { opacity: 1 }
 });
 
-// use the cities module for the location of the weather,
-// as darksky's is too broad sometimes.
-var cities = require('cities');
+// makeHourlyList() gets condensed info hourly info from the main response's hourly data
+// we'll pass in res.hourly from the darksky res
+const makeHourlyList = (hourlyData) => {
+
+  // Dark Sky API makes this pretty convenient
+
+  let condensedList = []; // we'll make a simple array for the days forecasted
+  hourlyData.forEach((day) => {
+    // get the date from the provided unix time 
+    const time = new Date(day.time * 1000);
+
+    // let year = time.getFullYear().toString().slice(0, 2);
+    let date = time.getDate();
+    let month = time.getMonth();
+
+    let hour = time.getHours(); 
+    let minutes = time.getMinutes();
+
+    condensedList.push({
+      desc: day.summary,
+      icon: day.icon,
+      temp: day.temperature,
+      time: `${hour}: ${minutes}`,
+      date: `${month + 1}-${date}` // need to correct for the api's month array
+    });
+
+  });
+
+  return condensedList;
+}
 
 class Weather extends Component {
 
@@ -42,19 +73,18 @@ class Weather extends Component {
   render() {
     const isVisible = this.props.showWeather;
 
-    let { lat, lng } = this.props.coords;
-    let city = cities.gps_lookup(lat, lng);
+    // let { lat, lng } = this.props.coords;
+    let hourlyWeather = makeHourlyList(this.props.weatherData.hourly.data);
+    console.log(this.props.hourlyData)
 
     return (
       <Div pose={isVisible ? 'visible' : 'hidden'} style={styles.container}>
 
-        <Button onClick={this.props.toggle} className="float-right" >
+        <Button onClick={this.props.toggle} className="float-right">
           <i className="fas fa-times-circle"></i>
         </Button>
 
-        <Div className="">
-          <P>{JSON.stringify(this.props.weather)}</P>
-        </Div>
+        <Hourly weatherList={hourlyWeather}/>
 
       </Div>
     );
@@ -64,12 +94,6 @@ class Weather extends Component {
 const styles = {
   container: {
     backgroundColor: 'rgba(255,255,255,0.5)',
-    height: '300px',
-    width: '400px', 
-    zIndex: 1,
-    position: 'absolute',
-    top: '50%',
-    right: '10%'
   }
 }
 

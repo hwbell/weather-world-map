@@ -7,8 +7,10 @@
     "cities": "^2.0.0",
     "mapbox-gl": "^0.53.1",
     "node-fetch": "^2.3.0",
+    "node-open-geocoder": "^3.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-horizontal-scroll-container": "^1.0.1",
     "react-pose": "^4.0.8",
     "react-scripts": "3.0.0",
     "reactstrap": "^8.0.0"
@@ -35,6 +37,7 @@
     ]
   },
   "devDependencies": {
-    "jest": "^24.7.1"
+    "jest": "^24.7.1",
+    "nodemon": "^1.18.11"
   }
 }

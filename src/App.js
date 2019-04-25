@@ -10,15 +10,23 @@ import Weather from './components/Weather';
 
 // tools
 import mapboxgl from 'mapbox-gl';
+const openGeocoder = require('node-open-geocoder');
 const fetch = require('node-fetch');
+
+// initial state of the component. start @ denver, co
+const initialState = {
+  weatherCoords: { lng: -104.991531, lat: 39.742243 },
+  showWeather: false,
+  location: 'Denver, CO'
+}
 
 class App extends Component {
 
   constructor(props) {
+
     super(props)
-    this.state = {
-      showWeather: false 
-    }
+    this.state = initialState;
+
     this.renderMap = this.renderMap.bind(this);
     this.fetchWeather = this.fetchWeather.bind(this);
     this.toggleShowWeather = this.toggleShowWeather.bind(this);
@@ -27,6 +35,7 @@ class App extends Component {
   componentDidMount() {
     this.renderMap();
   }
+
 
   // this is called both rom within the Weather component, to close the 
   // weather window
@@ -49,14 +58,14 @@ class App extends Component {
         "Content-type": "application/json"
       }
     })
-      .then( res => res.json() )
-      .then( res => {
+      .then(res => res.json())
+      .then(res => {
         console.log(res);
         self.setState({
           weatherData: res,
           showWeather: true
         });
-        
+
       })
   }
 
@@ -64,10 +73,15 @@ class App extends Component {
   renderMap() {
     const self = this;
 
+    let lng = this.state.weatherCoords.lng;
+    let lat = this.state.weatherCoords.lat;
+
     mapboxgl.accessToken = 'pk.eyJ1IjoiaHdiZWxsIiwiYSI6ImNqdXU4OXY2YjA4cWU0NGxsZzFlYWdobmwifQ.nnjWcSrzbW4o3oq-QYOXhg';
     var map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11'
+      center: [lng, lat],
+      zoom: 5,
+      style: 'mapbox://styles/mapbox/streets-v11',
     });
 
     map.on('mousemove', function (e) {
@@ -83,6 +97,32 @@ class App extends Component {
     // handle the user clicking the map
     map.on('click', function (e) {
 
+      openGeocoder()
+        .reverse(e.lngLat.lng, e.lngLat.lat)
+        .end((err, res) => {
+          if (err) {
+            console.log(err);
+            self.setState({
+              location: `Couldn't find address info ... click again?`
+            });
+          }
+          console.log(res)
+
+          // the address object includes different info for different places,
+          // so need to make it flexible
+          let { city, town, county, state, country } = res.address;
+
+          // filter out the ones that don't exist
+          let displayInfo = [city, town, county, state, country].filter(item => !!item)
+
+          let location = displayInfo.join(', ');
+
+          self.setState({
+            location
+          });
+
+        })
+
       // update state 
       self.setState({
         weatherCoords: e.lngLat,
@@ -95,22 +135,35 @@ class App extends Component {
 
   render() {
     return (
-      <div id='map' style={{ width: '1100px', height: '800px' }}>
+      <div style={styles.container}>
 
-        {/* shows after 2000ms */}
-        { this.state.coords && <Intro />}
+        <div id='map' style={{ width: '800px', height: '500px' }}>
 
-        {/* shows when the user clicks on the map */}
-        { this.state.showWeather && 
-        <Weather 
-          weather={this.state.weatherData}
-          coords={this.state.weatherCoords}
-          showWeather={this.state.showWeather}
-          toggle={this.toggleShowWeather}
-        /> }
+          {/* shows after 2000ms */}
+          {this.state.coords && <Intro />}
+
+        </div>
+
+        <div>
+          {/* shows when the user clicks on the map */}
+          {this.state.showWeather &&
+            <Weather
+              location={this.state.location}
+              weatherData={this.state.weatherData}
+              coords={this.state.weatherCoords}
+              showWeather={this.state.showWeather}
+              toggle={this.toggleShowWeather}
+            />}
+        </div>
 
       </div>
     );
+  }
+}
+
+const styles = {
+  container: {
+    margin: '3vw 3vh'
   }
 }
 
