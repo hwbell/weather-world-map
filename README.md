@@ -13,25 +13,34 @@ The app gets its weather data through a Node.js backend hosted @ https://hb-weat
 
 ## Summary of tools used:
 This app was made with: 
+
 **create-react-app - https://github.com/facebook/create-react-app**
 Initializes react project setup, very convenient.
+
 **React.js - https://reactjs.org/**
 Javascript framework for building UI.
+
 **Bootstrap - https://getbootstrap.com/**
 Makes flexible / responsive layouts simpler.
+
 **Mapbox - https://www.mapbox.com/**
 Makes using the zoomable map very easy.
+
 **DarkySky API - https://darksky.net/dev**
 Provides weather data used in the app. 
+
 **Node.js / Express.js - https://nodejs.org/en/**
-Upon a get request from the app / client, a Node.js backend is used to make the fetch to the DarkSky API, and the response is returned to to app / client. The app / client provides the latitude + longitude coordinates of the weather to be fetched by the server.
-Express is a great Node.js framework that makes a lot of server-side configurations very simple.
+Upon a get request from the app / client, a Node.js backend is used to make the fetch to the DarkSky API, and the response is returned to to app / client. The app / client provides the latitude + longitude coordinates of the weather to be fetched by the server. Express is a great Node.js framework that makes a lot of server-side configurations very simple.
+
 **Visual Studio Code - https://code.visualstudio.com/**
 A great code editor with lots of built in features.
+
 **Bash / Command Line - http://linuxcommand.org/**
 The app runs from the terminal, whether locally or in the cloud. Tests and such are run from the terminal during development.
+
 **Git - https://github.com/**
 Used for version control.
+
 ## Npm packages - https://www.npmjs.com/
   Various npm packages were used for this app.
   mapbox-gl
