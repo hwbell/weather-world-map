@@ -43,13 +43,21 @@ Used for version control.
 
 ## Npm packages - https://www.npmjs.com/
   Various npm packages were used for this app.
+  
   mapbox-gl
+  
   node-fetch
+  
   node-open-geocoder
+  
   rainbowvis.js
+  
   react-horizontal-scroll-container
+  
   react-pose
+  
   Reactstrap
+
 ## Caveats
   open-geo-coder only returns reverse coded info for land points. So if you click on the open ocean, the app will only display latitude, longitude as the location. You’ll still get the weather.
 The app is on heroku’s free dynos, so it may fall asleep. I’ve set up another app to ping it to stay awake, so it should always be up. If it looks like it is asleep, just give it a few seconds.
