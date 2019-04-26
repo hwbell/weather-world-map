@@ -239,7 +239,8 @@ const styles = {
   subtitle: {
     color: 'whitesmoke',
     fontSize: 'calc(10px + 1vw)',
-    marginLeft: '10vw'
+    margin: '3vh',
+    marginLeft: '10vw',
   },
   switchButton: {
     textDecoration: 'none',
