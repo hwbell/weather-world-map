@@ -150,7 +150,6 @@ class App extends Component {
           {this.state.showWeather &&
             <Weather
               location={this.state.location}
-              summary={this.state.weatherData.daily.summary}
               weatherData={this.state.weatherData}
               coords={this.state.weatherCoords}
               showWeather={this.state.showWeather}

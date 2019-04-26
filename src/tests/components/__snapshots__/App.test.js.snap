@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render App correctly 1`] = `
+<div
+  style={Object {}}
+>
+  <div
+    id="map"
+    style={
+      Object {
+        "height": "100vh",
+        "width": "100vw",
+      }
+    }
+  />
+  <div />
+</div>
+`;

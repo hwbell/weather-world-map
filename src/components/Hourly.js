@@ -48,7 +48,7 @@ class Hourly extends Component {
     // make a spectrum based on the first temp in the list
     let temp = this.props.weatherList[0].temp;
     // set range based on data
-    myRainbow.setNumberRange(15, 95); 
+    myRainbow.setNumberRange(0, 100);
     myRainbow.setSpectrum('#1976D2', '#FF5722');
 
     let hourlyContainers = this.props.weatherList.map((weather, i) => {
@@ -62,20 +62,16 @@ class Hourly extends Component {
         <Div key={i} className="" style={style}>
 
           {/* the temp and icon */}
-          <div className="row">
-            <div className="col">
-              <i style={styles.icon} className={getWeatherIcon(weather.icon)}></i>
-            </div>
-            <div className="col">
-              <p style={styles.text}>{weather.temp} &deg;F</p>
-            </div>
+          <div className="">
+            <i style={styles.icon} className={getWeatherIcon(weather.icon)}></i>
+          </div>
+          <div className="">
+            <p style={styles.temp}>{weather.temp} &deg;F</p>
           </div>
 
           {/* the timestamp */}
-          <div className="">
-            <p style={styles.text}>{weather.time}</p>
-            <p style={styles.text}>{weather.date}</p>
-          </div>
+          <p style={styles.text}>{weather.time}</p>
+          <p style={styles.text}>{weather.date}</p>
 
         </Div>
       )
@@ -89,8 +85,6 @@ class Hourly extends Component {
 
     return (
       <Container className="" style={styles.container}>
-
-        {/* <p style={styles.title}>hourly</p> */}
 
         <div className="row">
           <HorizontalScroller>
@@ -112,19 +106,19 @@ const styles = {
     margin: '15px'
   },
 
-  title: {
+  temp: {
+    textAlign: 'center',
     margin: 5,
-    fontSize: 'calc(12px + 1vw )'
+    fontSize: '24px'
   },
   icon: {
-    fontSize: '50px',
+    fontSize: '40px',
     textAlign: 'center',
     padding: '15px',
-    paddingTop: '5px'
+    paddingTop: '10px'
   },
   text: {
     textAlign: 'center',
-    minWidth: '50px',
     paddingHorizontal: 10
   }
 

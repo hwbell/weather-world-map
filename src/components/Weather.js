@@ -80,7 +80,7 @@ const makeHourlyList = (hourlyData) => {
       desc: hour.summary,
       icon: hour.icon,
       temp: Math.floor(hour.temperature),
-      time: `${hours} ${notation}`,
+      time: `${hours}:00 ${notation}`,
       date: `${month} ${date}` // need to correct for the api's month array
     });
 
@@ -169,6 +169,9 @@ class Weather extends Component {
     // only pass the first 7 days, this list is really long
     let dailyWeather = makeDailyList(data.daily.data).slice(0, 8);
 
+    // change the summary based on hourly vs. daily
+    let summary = this.state.showDaily ? data.daily.summary : data.hourly.summary;
+
     return (
       <Div pose={isVisible ? 'visible' : 'hidden'} style={styles.container}>
 
@@ -184,7 +187,7 @@ class Weather extends Component {
           <CurrentConditions weather={currentWeather} />}
 
         {/* short summary */}
-        <p style={styles.subtitle}>{this.props.summary}</p>
+        <p style={styles.subtitle}>{summary}</p>
 
         {/* the selestor for hourly / daily */}
         <Button color="link" style={styles.switchButton}
@@ -219,10 +222,10 @@ const styles = {
     fontSize: '24px'
   },
   title: {
-    // border: '1px solid black',
+    fontWeight: 'bold',
     color: 'whitesmoke',
     fontSize: 'calc(14px + 1vw)',
-    padding: 10
+    marginLeft: '5vw'
   },
   subtitle: {
     color: 'whitesmoke',
@@ -233,7 +236,7 @@ const styles = {
     textDecoration: 'none',
     fontSize: '20px',
     fontWeight: 'bold',
-    marginLeft: '10vw'
+    marginLeft: '9vw'
   }
 }
 

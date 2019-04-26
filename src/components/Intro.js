@@ -40,6 +40,7 @@ class Intro extends Component {
       <Div pose={isVisible ? 'visible' : 'hidden'} style={styles.container}>
         
         <P style={styles.title}>take a look around</P>
+        <P style={styles.subtitle}>click anywhere you'd like to see the weather</P>
 
       </Div>
     );
@@ -50,21 +51,20 @@ const styles = {
   container: {
     zIndex: 1,
     position: 'absolute',
-    top: '50px',
-    left: '30px'
+    top: '30px',
+    left: '20px',
   },
   title: {
     marginLeft: '20px',
-    color: 'black',
-    fontWeight: 'bold',
+    color: '#283747',
     fontSize: 'calc(16px + 2vw)'
   },
-  coordsHolder: {
-    margin: '30px'
-  },
-  coords: {
+  subtitle: { 
+    margin: '25px',
+    color: '#283747',
+    fontWeight: 'bold',
     fontSize: 'calc(10px + 1vw)'
-  }
+  },
 }
 
 export default Intro;
