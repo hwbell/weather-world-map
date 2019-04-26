@@ -5,7 +5,7 @@ import '../App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
 // components
-import { Button } from 'reactstrap';
+import { Button, Modal } from 'reactstrap';
 import Hourly from './Hourly';
 import Daily from './Daily';
 import CurrentConditions from './CurrentConditions';
@@ -27,7 +27,7 @@ const P = posed.div({
   visible: { opacity: 1 }
 });
 
-// need an array of Months and Days to get names
+// need arrays of Months and Days to get names
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -81,7 +81,7 @@ const makeHourlyList = (hourlyData) => {
       icon: hour.icon,
       temp: Math.floor(hour.temperature),
       time: `${hours}:00 ${notation}`,
-      date: `${month} ${date}` // need to correct for the api's month array
+      date: `${month} ${date}`
     });
 
   });
@@ -100,7 +100,7 @@ const makeDailyList = (dailyData) => {
     // get the date from the provided unix time 
     const time = new Date(day.time * 1000);
 
-    let year = time.getFullYear().toString();
+    // let year = time.getFullYear().toString();
     let date = time.getDate();
     let month = months[time.getMonth()];
     let weekday = days[time.getDay()];
@@ -160,11 +160,9 @@ class Weather extends Component {
     const data = this.props.weatherData;
 
     // make condensed lists to pass to the CurrentConditions, Hourly, Daily components
-
-
     let hourlyWeather = makeHourlyList(data.hourly.data);
 
-    let currentWeather = getCurrentData(data.currently)
+    let currentWeather = getCurrentData(data.currently);
 
     // only pass the first 7 days, this list is really long
     let dailyWeather = makeDailyList(data.daily.data).slice(0, 8);
@@ -198,9 +196,8 @@ class Weather extends Component {
           switch to {this.state.showHourly ? 'daily' : 'hourly'}
         </Button>
 
-
+        {/* animate the switch */}
         <PoseGroup>
-
           <Div key={'hourly'}>
             {/* the hourly weather tabs  */}
             {this.state.showHourly && <Hourly weatherList={hourlyWeather} />}
@@ -223,9 +220,8 @@ const styles = {
     zIndex: 1,
     position: 'absolute',
     bottom: '0px',
+    height: '550px',
     width: '100%',
-
-    // right: '10%'
   },
   icon: {
     fontSize: '24px'
@@ -234,7 +230,8 @@ const styles = {
     fontWeight: 'bold',
     color: 'whitesmoke',
     fontSize: 'calc(14px + 1vw)',
-    marginLeft: '5vw'
+    marginLeft: '5vw',
+    padding: '10px'
   },
   subtitle: {
     color: 'whitesmoke',

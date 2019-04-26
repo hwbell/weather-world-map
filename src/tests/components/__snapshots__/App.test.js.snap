@@ -17,6 +17,95 @@ exports[`should render App correctly 1`] = `
 </div>
 `;
 
+exports[`should render CurrentConditions correctly 1`] = `
+<div
+  className="row"
+  style={
+    Object {
+      "margin": "10",
+      "marginLeft": "10vw",
+    }
+  }
+>
+  <div
+    className="col"
+  >
+    <i
+      className="undefined col"
+      style={
+        Object {
+          "fontSize": "60px",
+          "padding": "10px",
+        }
+      }
+    />
+  </div>
+  <div
+    className="col"
+  >
+    <p
+      style={
+        Object {
+          "fontSize": "44px",
+        }
+      }
+    >
+      °F
+    </p>
+  </div>
+  <div
+    className="col"
+  >
+    <p
+      style={
+        Object {
+          "color": "whitesmoke",
+          "fontSize": "calc(10px + 1vw)",
+          "marginHorizontal": "20px",
+        }
+      }
+    />
+    <p
+      style={
+        Object {
+          "color": "whitesmoke",
+          "fontSize": "calc(10px + 1vw)",
+          "marginHorizontal": "20px",
+        }
+      }
+    >
+      undefined% humidity
+    </p>
+  </div>
+  <div
+    className="col"
+  >
+    <p
+      style={
+        Object {
+          "color": "whitesmoke",
+          "fontSize": "calc(10px + 1vw)",
+          "marginHorizontal": "20px",
+        }
+      }
+    >
+      undefined
+    </p>
+    <p
+      style={
+        Object {
+          "color": "whitesmoke",
+          "fontSize": "calc(10px + 1vw)",
+          "marginHorizontal": "20px",
+        }
+      }
+    >
+      undefined
+    </p>
+  </div>
+</div>
+`;
+
 exports[`should render Daily correctly 1`] = `
 <ForwardRef
   className=""
@@ -107,6 +196,7 @@ exports[`should render Weather correctly 1`] = `
     Object {
       "backgroundColor": "rgba(0,0,0,0.75)",
       "bottom": "0px",
+      "height": "550px",
       "position": "absolute",
       "width": "100%",
       "zIndex": 1,
@@ -156,6 +246,7 @@ exports[`should render Weather correctly 1`] = `
       Object {
         "color": "whitesmoke",
         "fontSize": "calc(10px + 1vw)",
+        "margin": "3vh",
         "marginLeft": "10vw",
       }
     }

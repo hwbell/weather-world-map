@@ -35,12 +35,20 @@ class Intro extends Component {
 
   render() {
     const isVisible = this.state.isVisible;
+
+    let lat = Math.round(this.props.coords.lat * 100) / 100;
+    let lng = Math.round(this.props.coords.lng * 100) / 100;
     
     return (
       <Div pose={isVisible ? 'visible' : 'hidden'} style={styles.container}>
-        
+
         <P style={styles.title}>take a look around</P>
         <P style={styles.subtitle}>click anywhere you'd like to see the weather</P>
+
+        <div className="">
+          <P style={styles.coords}>{`latitude: ${lat}`}</P>
+          <P style={styles.coords}>{`longitude: ${lng}`}</P>
+        </div>
 
       </Div>
     );
@@ -56,14 +64,20 @@ const styles = {
   },
   title: {
     marginLeft: '20px',
-    color: '#283747',
+    color: 'black',
     fontSize: 'calc(16px + 2vw)'
   },
-  subtitle: { 
-    margin: '25px',
-    color: '#283747',
+  subtitle: {
+    margin: '20px',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 'calc(10px + 1vw)'
+  },
+  coords: {
+    marginLeft: '20px',
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 'calc(6px + 1vw)'
   },
 }
 

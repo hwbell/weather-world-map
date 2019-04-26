@@ -26,9 +26,8 @@ let mockWeatherObj = {
 // https://stackoverflow.com/questions/48866088/testing-a-react-mapbox-gl-with-jsodom-and-jest
 jest.mock('mapbox-gl/dist/mapbox-gl', () => ({
   Map: () => ({})
-}));
-
-jest.mock('getWeatherIcon');
+}))
+jest.mock('../../tools/weatherImages')
 
 // shallow test components
 test('should render App correctly', () => {
@@ -66,4 +65,7 @@ test('should render Weather correctly', () => {
   renderer.render(<Weather weatherData={mockWeatherObj}/>);
   expect(renderer.getRenderOutput()).toMatchSnapshot();
 });
+
+
+// def need more testing for fetch's and functionality
 

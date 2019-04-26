@@ -48,14 +48,14 @@ class Hourly extends Component {
     // make a spectrum based on the first temp in the list
     let temp = this.props.weatherList[0].temperatureHigh;
     // set range based on data
-    myRainbow.setNumberRange(0, 100);
+    myRainbow.setNumberRange(-15, 100);
     myRainbow.setSpectrum('#303F9F', '#FF5722');
 
     let hourlyContainers = this.props.weatherList.map((weather, i) => {
 
       let style = {
         minWidth: '200px',
-        height: '260px',
+        height: '240px',
         backgroundColor: '#' + myRainbow.colourAt(weather.temperatureHigh),
         display: 'flex',
         flexDirection: 'column',

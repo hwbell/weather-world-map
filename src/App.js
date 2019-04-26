@@ -15,7 +15,8 @@ import mapboxgl from 'mapbox-gl';
 const openGeocoder = require('node-open-geocoder');
 const fetch = require('node-fetch');
 
-// initial state of the component. start @ denver, co
+// initial state of the component. start @ denver, co. 
+// this is just for positioning atm
 const initialState = {
   weatherCoords: { lng: -104.991531, lat: 39.742243 },
   showWeather: false,
@@ -35,6 +36,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    // render the map once mounted
     this.renderMap();
   }
 
@@ -47,7 +49,8 @@ class App extends Component {
     })
   }
 
-  // get the weather json to be passed to the Weather component
+  // get the weather json to be passed to the Weather component from our node backend,
+  // which will actually make the request to darksky
   fetchWeather() {
     const self = this;
 
@@ -65,16 +68,16 @@ class App extends Component {
         console.log(res);
         self.setState({
           weatherData: res,
-          showWeather: true
+          showWeather: true // show the data once we have it
         });
 
       })
-      .catch( (err) => {
+      .catch((err) => {
         console.log(err)
       });
   }
 
-  // show public map
+  // show public map with the publishing code from mapbox
   renderMap() {
     const self = this;
 
@@ -157,7 +160,7 @@ class App extends Component {
         <div id='map' style={{ width: '100vw', height: '100vh' }}>
 
           {/* shows after 2000ms */}
-          {this.state.coords && <Intro />}
+          {this.state.coords && <Intro coords={this.state.coords}/>}
 
         </div>
         <div>
