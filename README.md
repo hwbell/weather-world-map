@@ -9,7 +9,7 @@ Open a terminal and run the following commands:
 ### `cd weather-world-map`
 ###  `npm install`
 ### `npm start`
-The app gets its weather data through a Node.js backend hosted @ https://hb-weather-server.herokuapp.com/. The app itself is also deployed to @ https://hb-world-weather-map.herokuapp.com/. 
+The app gets its weather data through a Node.js backend hosted @ https://hb-weather-server.herokuapp.com/. The app itself is also deployed @ https://hb-world-weather-map.herokuapp.com/. 
 
 ## Summary of tools used:
 This app was made with: 
