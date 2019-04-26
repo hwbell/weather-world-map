@@ -1,3 +1,67 @@
+## World Weather Map
+
+This app was built as an open / public repo on github.com.
+Find the source code at https://github.com/hwbell/weather-world-map
+
+## How to run the app: 
+Open a terminal and run the following commands: 
+git clone https://github.com/hwbell/weather-world-map.git
+### `cd weather-world-map`
+###  `npm install`
+### `npm start`
+The app gets its weather data through a Node.js backend hosted @ https://hb-weather-server.herokuapp.com/. The app itself is also deployed to @ https://hb-world-weather-map.herokuapp.com/. 
+
+## Summary of tools used:
+This app was made with: 
+
+**create-react-app - https://github.com/facebook/create-react-app**
+Initializes react project setup, very convenient.
+
+**React.js - https://reactjs.org/**
+Javascript framework for building UI.
+
+**Bootstrap - https://getbootstrap.com/**
+Makes flexible / responsive layouts simpler.
+
+**Mapbox - https://www.mapbox.com/**
+Makes using the zoomable map very easy.
+
+**DarkySky API - https://darksky.net/dev**
+Provides weather data used in the app. 
+
+**Node.js / Express.js - https://nodejs.org/en/**
+Upon a get request from the app / client, a Node.js backend is used to make the fetch to the DarkSky API, and the response is returned to to app / client. The app / client provides the latitude + longitude coordinates of the weather to be fetched by the server. Express is a great Node.js framework that makes a lot of server-side configurations very simple.
+
+**Visual Studio Code - https://code.visualstudio.com/**
+A great code editor with lots of built in features.
+
+**Bash / Command Line - http://linuxcommand.org/**
+The app runs from the terminal, whether locally or in the cloud. Tests and such are run from the terminal during development.
+
+**Git - https://github.com/**
+Used for version control.
+
+## Npm packages - https://www.npmjs.com/
+  Various npm packages were used for this app.
+  
+  mapbox-gl
+  
+  node-fetch
+  
+  node-open-geocoder
+  
+  rainbowvis.js
+  
+  react-horizontal-scroll-container
+  
+  react-pose
+  
+  Reactstrap
+
+## Caveats
+  open-geo-coder only returns reverse coded info for land points. So if you click on the open ocean, the app will only display latitude, longitude as the location. You’ll still get the weather.
+The app is on heroku’s free dynos, so it may fall asleep. I’ve set up another app to ping it to stay awake, so it should always be up. If it looks like it is asleep, just give it a few seconds.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
