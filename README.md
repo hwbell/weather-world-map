@@ -5,7 +5,7 @@ Find the source code at https://github.com/hwbell/weather-world-map
 
 ## How to run the app: 
 Open a terminal and run the following commands: 
-git clone https://github.com/hwbell/weather-world-map.git
+### `git clone https://github.com/hwbell/weather-world-map.git`
 ### `cd weather-world-map`
 ###  `npm install`
 ### `npm start`
