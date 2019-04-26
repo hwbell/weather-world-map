@@ -104,24 +104,36 @@ class App extends Component {
         .end((err, res) => {
           if (err) {
             console.log(err);
-            self.setState({
+            return self.setState({
               location: `Couldn't find address info ... click again?`
             });
           }
-          console.log(res)
+          // console.log(res)
 
-          // the address object includes different info for different places,
-          // so need to make it flexible
-          let { city, town, county, state, country } = res.address;
+          if (res.address) {
+            // the address object includes different info for different places,
+            // so need to make it flexible
+            let { city, town, county, state, country } = res.address;
 
-          // filter out the ones that don't exist
-          let displayInfo = [city, town, county, state, country].filter(item => !!item)
+            // filter out the ones that don't exist
+            let displayInfo = [city, town, county, state, country].filter(item => !!item)
 
-          let location = displayInfo.join(', ');
+            let location = displayInfo.join(', ');
 
-          self.setState({
-            location
-          });
+            self.setState({
+              location
+            });
+          }
+          else {
+            // if can't get any info, just show lat / long. this happens in open ocean,
+            // for example
+            let lat = Math.round(e.lngLat.lat * 100) / 100;
+            let lng = Math.round(e.lngLat.lng * 100) / 100;
+
+            self.setState({
+              location: `Latitude: ${lat}, Longitude: ${lng}`
+            });
+          }
 
         })
 
@@ -144,8 +156,8 @@ class App extends Component {
           {/* shows after 2000ms */}
           {this.state.coords && <Intro />}
 
-       </div>
-       <div>
+        </div>
+        <div>
           {/* shows when the user clicks on the map */}
           {this.state.showWeather &&
             <Weather

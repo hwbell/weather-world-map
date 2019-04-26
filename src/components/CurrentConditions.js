@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import posed from 'react-pose';
 
 // tools
-import { weatherImageList, getWeatherIcon } from '../tools/weatherImages';
+import { weatherImagesList, getWeatherIcon } from '../tools/weatherImages';
 
 // use react-pose for fading in
 const Div = posed.div({
@@ -36,20 +36,16 @@ class CurrentConditions extends Component {
 
   render() {
     let weather = this.props.weather;
-    let iconClass = getWeatherIcon(weather.icon);
 
     return (
       <div className="row" style={styles.container}>
 
         <div className="col">
-          <i style={styles.icon} className={iconClass + ' col'}></i>
+          <i style={styles.icon} className={getWeatherIcon(weather.icon) + ' col'}></i>
         </div>
 
         <div className="col">
-          <div className="row">
-            <p style={styles.temperature}>{weather.temperature}</p>
-            <p style={styles.degree}>&deg;F</p>
-          </div>
+            <p style={styles.temperature}>{weather.temperature}&deg;F</p>
         </div>
 
         <div className="col">
@@ -76,13 +72,13 @@ const styles = {
     fontSize: '60px',
     padding: '10px'
   },
-  temperature: {
-    fontSize: '40px',
-    margin: '15px',
+  tempHolder: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  degree: {
-    paddingTop: '10px',
-    fontSize: '20px'
+  temperature: {
+    fontSize: '44px',
   },
   paragraph: {
     color: 'whitesmoke',

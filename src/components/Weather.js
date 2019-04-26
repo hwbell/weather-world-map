@@ -11,7 +11,7 @@ import Daily from './Daily';
 import CurrentConditions from './CurrentConditions';
 
 // animation with pose
-import posed from 'react-pose';
+import posed, { PoseGroup } from 'react-pose';
 
 // tools
 import { weatherImageList, getWeatherIcon } from '../tools/weatherImages';
@@ -103,7 +103,7 @@ const makeDailyList = (dailyData) => {
     let year = time.getFullYear().toString();
     let date = time.getDate();
     let month = months[time.getMonth()];
-    let weekday = days[time.getDay()]; 
+    let weekday = days[time.getDay()];
 
     let {
       temperatureHigh,
@@ -148,8 +148,8 @@ class Weather extends Component {
   }
 
   // for the toggle between hourly and daily
-  handleSwitch () {
-    this.setState({ 
+  handleSwitch() {
+    this.setState({
       showDaily: !this.state.showDaily,
       showHourly: !this.state.showHourly
     })
@@ -173,6 +173,7 @@ class Weather extends Component {
     let summary = this.state.showDaily ? data.daily.summary : data.hourly.summary;
 
     return (
+
       <Div pose={isVisible ? 'visible' : 'hidden'} style={styles.container}>
 
         <Button color='link' onClick={this.props.close} className="float-right">
@@ -180,11 +181,12 @@ class Weather extends Component {
         </Button>
 
         <p style={styles.title}>{this.props.location}</p>
-        
+
 
         {/* the current conditions */}
         {currentWeather &&
-          <CurrentConditions weather={currentWeather} />}
+          <CurrentConditions
+            weather={currentWeather} />}
 
         {/* short summary */}
         <p style={styles.subtitle}>{summary}</p>
@@ -197,11 +199,18 @@ class Weather extends Component {
         </Button>
 
 
-        {/* the hourly weather tabs  */}
-        { this.state.showHourly && <Hourly weatherList={hourlyWeather}/>}
+        <PoseGroup>
 
-        {/* the daily weather tabs */}
-        { this.state.showDaily && <Daily weatherList={dailyWeather} />}
+          <Div key={'hourly'}>
+            {/* the hourly weather tabs  */}
+            {this.state.showHourly && <Hourly weatherList={hourlyWeather} />}
+          </Div>
+
+          <Div key={'daily'}>
+            {/* the daily weather tabs */}
+            {this.state.showDaily && <Daily weatherList={dailyWeather} />}
+          </Div>
+        </PoseGroup>
 
       </Div>
     );
@@ -230,7 +239,7 @@ const styles = {
   subtitle: {
     color: 'whitesmoke',
     fontSize: 'calc(10px + 1vw)',
-    marginLeft: '10vw' 
+    marginLeft: '10vw'
   },
   switchButton: {
     textDecoration: 'none',

@@ -55,7 +55,7 @@ class Hourly extends Component {
 
       let style = {
         minWidth: '200px',
-        height: '300px',
+        height: '260px',
         backgroundColor: '#' + myRainbow.colourAt(weather.temperatureHigh),
         display: 'flex',
         flexDirection: 'column',
@@ -153,7 +153,7 @@ const styles = {
     textAlign: 'left',
     margin: '8px',
     marginTop: '30px',
-    fontSize: '16px',
+    fontSize: '14px',
   }
 }
 

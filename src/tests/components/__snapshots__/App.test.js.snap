@@ -16,3 +16,175 @@ exports[`should render App correctly 1`] = `
   <div />
 </div>
 `;
+
+exports[`should render Daily correctly 1`] = `
+<ForwardRef
+  className=""
+  style={Object {}}
+>
+  <div
+    className="row"
+  >
+    <HorizontalScrollContainer
+      invert={false}
+      onScroll={[Function]}
+      sensibility={100}
+      style={
+        Object {
+          "margin": "0px",
+          "padding": "0px",
+        }
+      }
+    />
+  </div>
+</ForwardRef>
+`;
+
+exports[`should render Hourly correctly 1`] = `
+<ForwardRef
+  className=""
+  style={
+    Object {
+      "margin": "15px",
+      "padding": "0px",
+    }
+  }
+>
+  <div
+    className="row"
+  >
+    <HorizontalScrollContainer
+      invert={false}
+      onScroll={[Function]}
+      sensibility={100}
+    />
+  </div>
+</ForwardRef>
+`;
+
+exports[`should render Intro correctly 1`] = `
+<ForwardRef
+  pose="hidden"
+  style={
+    Object {
+      "left": "20px",
+      "position": "absolute",
+      "top": "30px",
+      "zIndex": 1,
+    }
+  }
+>
+  <ForwardRef
+    style={
+      Object {
+        "color": "#283747",
+        "fontSize": "calc(16px + 2vw)",
+        "marginLeft": "20px",
+      }
+    }
+  >
+    take a look around
+  </ForwardRef>
+  <ForwardRef
+    style={
+      Object {
+        "color": "#283747",
+        "fontSize": "calc(10px + 1vw)",
+        "fontWeight": "bold",
+        "margin": "25px",
+      }
+    }
+  >
+    click anywhere you'd like to see the weather
+  </ForwardRef>
+</ForwardRef>
+`;
+
+exports[`should render Weather correctly 1`] = `
+<ForwardRef
+  pose="hidden"
+  style={
+    Object {
+      "backgroundColor": "rgba(0,0,0,0.75)",
+      "bottom": "0px",
+      "position": "absolute",
+      "width": "100%",
+      "zIndex": 1,
+    }
+  }
+>
+  <Button
+    className="float-right"
+    color="link"
+    tag="button"
+  >
+    <i
+      className="fas fa-times-circle"
+      style={
+        Object {
+          "fontSize": "24px",
+        }
+      }
+    />
+  </Button>
+  <p
+    style={
+      Object {
+        "color": "whitesmoke",
+        "fontSize": "calc(14px + 1vw)",
+        "fontWeight": "bold",
+        "marginLeft": "5vw",
+      }
+    }
+  />
+  <CurrentConditions
+    weather={
+      Object {
+        "date": "undefined NaN, NaN",
+        "humidity": undefined,
+        "icon": undefined,
+        "summary": undefined,
+        "temperature": NaN,
+        "time": "NaN:00  am",
+        "uvIndex": undefined,
+        "windSpeed": undefined,
+      }
+    }
+  />
+  <p
+    style={
+      Object {
+        "color": "whitesmoke",
+        "fontSize": "calc(10px + 1vw)",
+        "marginLeft": "10vw",
+      }
+    }
+  />
+  <Button
+    color="link"
+    onClick={[Function]}
+    style={
+      Object {
+        "fontSize": "20px",
+        "fontWeight": "bold",
+        "marginLeft": "9vw",
+        "textDecoration": "none",
+      }
+    }
+    tag="button"
+  >
+    switch to 
+    hourly
+  </Button>
+  <PoseGroup
+    flipMove={true}
+  >
+    <ForwardRef />
+    <ForwardRef>
+      <Hourly
+        weatherList={Array []}
+      />
+    </ForwardRef>
+  </PoseGroup>
+</ForwardRef>
+`;
