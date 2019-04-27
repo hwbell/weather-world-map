@@ -74,7 +74,7 @@ const styles = {
     fontSize: 'calc(10px + 1vw)'
   },
   coords: {
-    marginLeft: '20px',
+    margin: '20px',
     color: 'black',
     fontWeight: 'bold',
     fontSize: 'calc(6px + 1vw)'
