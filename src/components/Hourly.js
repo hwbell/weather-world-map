@@ -103,6 +103,7 @@ class Hourly extends Component {
 const styles = {
   container: {
     padding: '0px',
+    marginBottom: '20px',
     margin: '15px'
   },
 

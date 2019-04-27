@@ -66,6 +66,3 @@ test('should render Weather correctly', () => {
   expect(renderer.getRenderOutput()).toMatchSnapshot();
 });
 
-
-// def need more testing for fetch's and functionality
-

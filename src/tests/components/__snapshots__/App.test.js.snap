@@ -224,6 +224,7 @@ exports[`should render Weather correctly 1`] = `
         "fontSize": "calc(14px + 1vw)",
         "fontWeight": "bold",
         "marginLeft": "5vw",
+        "padding": "10px",
       }
     }
   />

@@ -186,9 +186,6 @@ class Weather extends Component {
           <CurrentConditions
             weather={currentWeather} />}
 
-        {/* short summary */}
-        <p style={styles.subtitle}>{summary}</p>
-
         {/* the selestor for hourly / daily */}
         <Button color="link" style={styles.switchButton}
           onClick={this.handleSwitch}
@@ -209,6 +206,9 @@ class Weather extends Component {
           </Div>
         </PoseGroup>
 
+        {/* short summary */}
+        <p style={styles.subtitle}>{summary}</p>
+
       </Div>
     );
   }
@@ -219,7 +219,7 @@ const styles = {
     backgroundColor: 'rgba(0,0,0,0.75)',
     zIndex: 1,
     position: 'absolute',
-    bottom: '0px',
+    bottom: '10px',
     height: '550px',
     width: '100%',
   },

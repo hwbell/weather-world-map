@@ -117,11 +117,12 @@ class Hourly extends Component {
 
 const styles = {
   container: {
+    // marginBottom: '20px',
     // margin: '10px',
   },
   scroller: {
-    margin: '0px',
-    padding: '0px'
+    // margin: '0px',
+    // padding: '0px'
   },
   title: {
     margin: '5px',
@@ -152,7 +153,7 @@ const styles = {
   paragraph: {
     textAlign: 'left',
     margin: '8px',
-    marginTop: '30px',
+    marginTop: '20px',
     fontSize: '14px',
   }
 }
