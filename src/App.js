@@ -33,6 +33,8 @@ class App extends Component {
     this.renderMap = this.renderMap.bind(this);
     this.fetchWeather = this.fetchWeather.bind(this);
     this.toggleShowWeather = this.toggleShowWeather.bind(this);
+    this.registerClick = this.registerClick.bind(this);
+    this.toggleView = this.registerClick.bind(this);
   }
 
   componentDidMount() {
@@ -40,13 +42,55 @@ class App extends Component {
     this.renderMap();
   }
 
+  // show public map with the publishing code from mapbox
+  renderMap() {
+    const self = this;
 
-  // this is called both rom within the Weather component, to close the 
-  // weather window
-  toggleShowWeather() {
-    this.setState({
-      showWeather: false
+    let lng = this.state.weatherCoords.lng;
+    let lat = this.state.weatherCoords.lat;
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaHdiZWxsIiwiYSI6ImNqdXU4OXY2YjA4cWU0NGxsZzFlYWdobmwifQ.nnjWcSrzbW4o3oq-QYOXhg';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      center: [lng, lat],
+      zoom: 5,
+      style: 'mapbox://styles/hwbell/cjuvfzqlt4h141fomxbjysorm',
+    });
+    map.addControl(new mapboxgl.NavigationControl());
+    map.on('mousemove', function (e) {
+
+      // save the state of the mouse in lat, lng (coords) and  x,y (points) 
+      self.setState({
+        coords: e.lngLat,
+        points: e.point
+      });
+
     })
+
+    // handle the user clicking the map
+    map.on('click', function (e) {
+      self.registerClick(e);
+    });
+
+    this.setState({ map });
+  }
+
+  // switch between map and satellite
+  toggleView() {
+    let satellite = 'mapbox://styles/mapbox/satellite-v9';
+    let map = 'mapbox://styles/hwbell/cjuvfzqlt4h141fomxbjysorm';
+    let newMap = JSON.parse(JSON.stringify(this.state.map));
+
+    if (this.state.map.style === map) {
+      newMap.setStyle(satellite);
+    } else {
+      newMap.setStyle(map);
+    }
+
+    this.setState({
+      map: newMap
+    })
+
   }
 
   // get the weather json to be passed to the Weather component from our node backend,
@@ -77,90 +121,75 @@ class App extends Component {
       });
   }
 
-  // show public map with the publishing code from mapbox
-  renderMap() {
-    const self = this;
-
-    let lng = this.state.weatherCoords.lng;
-    let lat = this.state.weatherCoords.lat;
-
-    mapboxgl.accessToken = 'pk.eyJ1IjoiaHdiZWxsIiwiYSI6ImNqdXU4OXY2YjA4cWU0NGxsZzFlYWdobmwifQ.nnjWcSrzbW4o3oq-QYOXhg';
-    var map = new mapboxgl.Map({
-      container: 'map',
-      center: [lng, lat],
-      zoom: 5,
-      style: 'mapbox://styles/hwbell/cjuvfzqlt4h141fomxbjysorm',
-    });
-
-    map.on('mousemove', function (e) {
-
-      // save the state of the mouse in lat, lng (coords) and  x,y (points) 
-      self.setState({
-        coords: e.lngLat,
-        points: e.point
-      });
-
+  // this is called from within the Weather component, to close the 
+  // weather window
+  toggleShowWeather() {
+    this.setState({
+      showWeather: false
     })
+  }
 
-    // handle the user clicking the map
-    map.on('click', function (e) {
+  registerClick(e) {
+    // use node-open-geocoder to get location info
+    openGeocoder()
+      .reverse(e.lngLat.lng, e.lngLat.lat)
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return this.setState({
+            location: `Couldn't find address info ... click again?`
+          });
+        }
+        // console.log(res)
 
-      openGeocoder()
-        .reverse(e.lngLat.lng, e.lngLat.lat)
-        .end((err, res) => {
-          if (err) {
-            console.log(err);
-            return self.setState({
-              location: `Couldn't find address info ... click again?`
-            });
-          }
-          // console.log(res)
+        if (res.address) {
+          // the address object includes different info for different places,
+          // so need to make it flexible
+          let { city, town, county, state, country } = res.address;
 
-          if (res.address) {
-            // the address object includes different info for different places,
-            // so need to make it flexible
-            let { city, town, county, state, country } = res.address;
+          // filter out the ones that don't exist
+          let displayInfo = [city, town, county, state, country].filter(item => !!item)
 
-            // filter out the ones that don't exist
-            let displayInfo = [city, town, county, state, country].filter(item => !!item)
+          let location = displayInfo.join(', ');
 
-            let location = displayInfo.join(', ');
+          this.setState({
+            location
+          });
+        }
+        else {
+          // if can't get any info, just show lat / long. this happens in open ocean,
+          // for example
+          let lat = Math.round(e.lngLat.lat * 100) / 100;
+          let lng = Math.round(e.lngLat.lng * 100) / 100;
 
-            self.setState({
-              location
-            });
-          }
-          else {
-            // if can't get any info, just show lat / long. this happens in open ocean,
-            // for example
-            let lat = Math.round(e.lngLat.lat * 100) / 100;
-            let lng = Math.round(e.lngLat.lng * 100) / 100;
+          let location = `Latitude: ${lat}, Longitude: ${lng}`;
+          this.setState({
+            location
+          });
+        }
 
-            self.setState({
-              location: `Latitude: ${lat}, Longitude: ${lng}`
-            });
-          }
+      })
 
-        })
-
-      // update state 
-      self.setState({
-        weatherCoords: e.lngLat,
-        points: e.point
-      }, () => {
-        self.fetchWeather();
-      });
+    // update state 
+    this.setState({
+      weatherCoords: e.lngLat,
+      points: e.point
+    }, () => {
+      this.fetchWeather();
     });
   }
 
+  // 
   render() {
+
     return (
       <div style={styles.container}>
 
+        {/* the map itself */}
         <div id='map' style={{ width: '100vw', height: '100vh' }}>
 
-          {/* shows after 2000ms */}
-          {this.state.coords && <Intro coords={this.state.coords}/>}
+          {/* the upper left text - shows after 2000ms */}
+          {this.state.coords && <Intro coords={this.state.coords} />}
 
         </div>
         <div>

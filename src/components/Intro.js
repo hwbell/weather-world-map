@@ -65,6 +65,7 @@ const styles = {
   title: {
     marginLeft: '20px',
     color: 'black',
+    fontWeight: 'bold',
     fontSize: 'calc(16px + 2vw)'
   },
   subtitle: {

@@ -55,6 +55,7 @@ class Hourly extends Component {
 
       let style = {
         minWidth: '200px',
+        padding: 0,
         height: '240px',
         backgroundColor: '#' + myRainbow.colourAt(weather.temperatureHigh),
         display: 'flex',

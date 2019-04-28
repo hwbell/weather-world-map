@@ -105,22 +105,13 @@ const makeDailyList = (dailyData) => {
     let month = months[time.getMonth()];
     let weekday = days[time.getDay()];
 
-    let {
-      temperatureHigh,
-      temperatureLow,
-      summary,
-      humidity,
-      icon,
-      windSpeed,
-    } = day;
-
     condensedList.push({
-      temperatureHigh: Math.floor(temperatureHigh),
-      temperatureLow: Math.floor(temperatureLow),
-      summary,
-      humidity,
-      icon,
-      windSpeed,
+      temperatureHigh: Math.floor(day.temperatureHigh),
+      temperatureLow: Math.floor(day.temperatureLow),
+      summary: day.summary,
+      humidity: day.humidity,
+      icon: day.icon,
+      windSpeed: day.windSpeed,
       date: `${weekday}, ${month} ${date}` // need to correct for the api's month array
     });
 
