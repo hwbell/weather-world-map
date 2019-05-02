@@ -54,9 +54,9 @@ class Hourly extends Component {
     let hourlyContainers = this.props.weatherList.map((weather, i) => {
 
       let style = {
-        minWidth: '200px',
+        minWidth: '160px',
         padding: 0,
-        height: '240px',
+        margin: 0,
         backgroundColor: '#' + myRainbow.colourAt(weather.temperatureHigh),
         display: 'flex',
         flexDirection: 'column',
@@ -118,10 +118,12 @@ class Hourly extends Component {
 
 const styles = {
   container: {
+    width: '100%'
     // marginBottom: '20px',
     // margin: '10px',
   },
   scroller: {
+    width: '80%'
     // margin: '0px',
     // padding: '0px'
   },

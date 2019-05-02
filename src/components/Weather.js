@@ -112,7 +112,7 @@ const makeDailyList = (dailyData) => {
       humidity: day.humidity,
       icon: day.icon,
       windSpeed: day.windSpeed,
-      date: `${weekday}, ${month} ${date}` // need to correct for the api's month array
+      date: `${weekday}, ${month} ${date}` 
     });
 
   });
@@ -155,8 +155,8 @@ class Weather extends Component {
 
     let currentWeather = getCurrentData(data.currently);
 
-    // only pass the first 7 days, this list is really long
-    let dailyWeather = makeDailyList(data.daily.data).slice(0, 8);
+    // only pass the first 15 days, this list is really long
+    let dailyWeather = makeDailyList(data.daily.data).slice(0, 16);
 
     // change the summary based on hourly vs. daily
     let summary = this.state.showDaily ? data.daily.summary : data.hourly.summary;
@@ -218,7 +218,7 @@ const styles = {
     fontSize: '24px'
   },
   title: {
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     color: 'whitesmoke',
     fontSize: 'calc(14px + 1vw)',
     marginLeft: '5vw',
