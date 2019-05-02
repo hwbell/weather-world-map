@@ -40,22 +40,21 @@ class CurrentConditions extends Component {
     return (
       <div className="row" style={styles.container}>
 
-        <div className="col">
-          <i style={styles.icon} className={getWeatherIcon(weather.icon) + ' col'}></i>
+        <div className="" style={styles.infoHolder}>
+          <p style={styles.paragraph}>
+            <i style={styles.icon} className={getWeatherIcon(weather.icon)}></i>
+          </p>
+
         </div>
 
-        <div className="col">
-            <p style={styles.temperature}>{weather.temperature}&deg;F</p>
-        </div>
-
-        <div className="col">
+        <div className="" style={styles.infoHolder}>
+          <p style={styles.temperature}>{weather.temperature}&deg;F</p>
           <p style={styles.paragraph}>{weather.summary}</p>
-          <p style={styles.paragraph}>{`${weather.humidity}% humidity`}</p>
+          <p style={styles.paragraph}>{`${weather.time}`}</p>
         </div>
 
-        <div className="col">
-          <p style={styles.paragraph}>{`${weather.date}`}</p>
-          <p style={styles.paragraph}>{`${weather.time}`}</p>
+        <div className="" style={styles.infoHolder}>
+          <p style={styles.paragraph}>{`${weather.humidity}% humidity`}</p>
         </div>
 
       </div>
@@ -65,25 +64,36 @@ class CurrentConditions extends Component {
 
 const styles = {
   container: {
-    margin: '10',
-    marginLeft: '10vw'
-  },
-  icon: {
-    fontSize: '60px',
-    padding: '10px'
-  },
-  tempHolder: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    margin: '10',
+    // marginLeft: '10vw'
+  },
+  icon: {
+    fontSize: '50px',
+    padding: '10px',
+    paddingTop: '20px'
+    // paddingLeft: '30px'
+  },
+  infoHolder: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '80px'
   },
   temperature: {
-    fontSize: '44px',
+    fontSize: '30px',
+    margin: '0px'
   },
   paragraph: {
+    textAlign: 'center',
     color: 'whitesmoke',
-    fontSize: 'calc(10px + 1vw)',
+    fontSize: 'calc(8px + 1vw)',
     marginHorizontal: '20px',
+    display: 'inline-block'
     // paddingHorizontal: 12
   }
 }

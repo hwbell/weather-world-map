@@ -188,8 +188,8 @@ class App extends Component {
         {/* the map itself */}
         <div id='map' style={{ width: '100vw', height: '100vh' }}>
 
-          {/* the upper left text - shows after 2000ms */}
-          {this.state.coords && <Intro coords={this.state.coords} />}
+          {/* the upper left text */}
+          { <Intro coords={this.state.coords} />}
 
         </div>
         <div>

@@ -54,7 +54,7 @@ const getCurrentData = (currentData) => {
     humidity, icon, summary, uvIndex, windSpeed,
     temperature: Math.floor(temperature),
     time: `${hours}:00 ${notation}`,
-    date: `${month} ${date}, ${year}`
+    date: `${time.getMonth()+1}/${date}/${year}`
   };
 }
 
@@ -177,7 +177,7 @@ class Weather extends Component {
           <CurrentConditions
             weather={currentWeather} />}
 
-        {/* the selestor for hourly / daily */}
+        {/* the selector for hourly / daily */}
         <Button color="link" style={styles.switchButton}
           onClick={this.handleSwitch}
         >
@@ -208,10 +208,10 @@ class Weather extends Component {
 const styles = {
   container: {
     backgroundColor: 'rgba(0,0,0,0.75)',
-    zIndex: 1,
+    zIndex: 2,
     position: 'absolute',
-    bottom: '10px',
-    height: '550px',
+    top: '10%',
+    height: '90%',
     width: '100%',
   },
   icon: {

@@ -7,6 +7,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 // animation with pose
 import posed from 'react-pose';
 
+// components
+import {Button} from 'reactstrap';
+
 // use react-pose for fading in
 const Div = posed.div({
   hidden: { opacity: 0 },
@@ -36,19 +39,20 @@ class Intro extends Component {
   render() {
     const isVisible = this.state.isVisible;
 
-    let lat = Math.round(this.props.coords.lat * 100) / 100;
-    let lng = Math.round(this.props.coords.lng * 100) / 100;
-    
     return (
-      <Div pose={isVisible ? 'visible' : 'hidden'} style={styles.container}>
+      <Div pose={isVisible ? 'visible' : 'hidden'} className="text-center" style={styles.container}>
+        <Button color='link' onClick={this.props.close} className="float-right">
+          <i style={styles.icon} className="fas fa-times-circle"></i>
+        </Button>
 
         <P style={styles.title}>take a look around</P>
-        <P style={styles.subtitle}>click anywhere you'd like to see the weather</P>
+        <P style={styles.subtitle}>click anywhere to see the weather</P>
 
-        <div className="">
-          <P style={styles.coords}>{`latitude: ${lat}`}</P>
-          <P style={styles.coords}>{`longitude: ${lng}`}</P>
-        </div>
+        {this.props.coords &&
+          <div className="">
+            <P style={styles.subtitle}>{`latitude: ${Math.round(this.props.coords.lat * 100) / 100}`}</P>
+            <P style={styles.subtitle}>{`longitude: ${Math.round(this.props.coords.lng * 100) / 100}`}</P>
+          </div>}
 
       </Div>
     );
@@ -59,27 +63,33 @@ const styles = {
   container: {
     zIndex: 1,
     position: 'absolute',
-    top: '30px',
-    left: '20px',
+    top: '5%',
+    left: '5%',
+    width: 'calc(300px + 6vw)',
+    height: 'calc(180px + 8vh)',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: '30px'
+
   },
   title: {
+    padding: '20px',
     marginLeft: '20px',
+    textAlign: 'left',
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 'calc(16px + 2vw)'
+    fontSize: 'calc(16px + 1vw)'
   },
   subtitle: {
+    textAlign: 'left',
     margin: '20px',
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 'calc(10px + 1vw)'
+    fontSize: 'calc(12px + 0.5vw)'
   },
-  coords: {
-    margin: '20px',
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 'calc(6px + 1vw)'
-  },
+  icon: {
+    color: 'black'
+  }
+
 }
 
 export default Intro;
