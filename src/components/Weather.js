@@ -209,11 +209,13 @@ class Weather extends Component {
 const styles = {
   container: {
     backgroundColor: 'rgba(0,0,0,0.75)',
+    borderRadius: '25px',
     zIndex: 2,
     position: 'absolute',
     top: '10%',
+    left: '5%',
     height: '90%',
-    width: '100%',
+    width: '90%',
   },
   icon: {
     fontSize: '24px'

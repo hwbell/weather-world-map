@@ -10,7 +10,7 @@ import Weather from './components/Weather';
 
 // tools
 import mapboxgl from 'mapbox-gl';
-
+import { weatherImageList, getWeatherIcon, getPastRecord } from './tools/weatherImages';
 
 const openGeocoder = require('node-open-geocoder');
 const fetch = require('node-fetch');
@@ -20,7 +20,9 @@ const fetch = require('node-fetch');
 const initialState = {
   weatherCoords: { lng: -104.991531, lat: 39.742243 },
   showWeather: false,
-  location: 'Denver, CO'
+  location: 'Denver, CO',
+  loadingWeather: false,
+  weatherRecords: []
 }
 
 class App extends Component {
@@ -35,6 +37,7 @@ class App extends Component {
     this.toggleShowWeather = this.toggleShowWeather.bind(this);
     this.registerClick = this.registerClick.bind(this);
     this.toggleView = this.registerClick.bind(this);
+    this.showPopup = this.showPopup.bind(this);
   }
 
   componentDidMount() {
@@ -58,18 +61,62 @@ class App extends Component {
     });
     map.addControl(new mapboxgl.NavigationControl());
     map.on('mousemove', function (e) {
-
       // save the state of the mouse in lat, lng (coords) and  x,y (points) 
       self.setState({
         coords: e.lngLat,
-        points: e.point
+        point: e.point
       });
 
     })
 
     // handle the user clicking the map
     map.on('click', function (e) {
+      console.log(e)
+      // get the weather
       self.registerClick(e);
+
+      var geojson = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: {
+                lng: e.lngLat.lng,
+                lat: e.lngLat.lat
+              },
+              point: e.point
+            },
+            properties: {
+              title: 'Mapbox',
+              description: 'Washington, D.C.'
+            }
+          },
+        ]
+      };
+
+      // add markers to map
+      geojson.features.forEach(function (marker) {
+
+        // create a HTML element for each feature
+        var el = document.createElement('i');
+        el.className = 'marker fas fa-map-marker-alt';
+        el.onmouseover = () => {
+          let point = marker.geometry.point;
+          let coords = marker.geometry.coordinates;
+          self.showPopup(point, coords);
+        }
+        el.onmouseleave = () => {
+          self.hidePopup();
+        }
+        // make a marker for each feature and add to the map
+        new mapboxgl.Marker(el)
+          .setLngLat(marker.geometry.coordinates)
+          // attach popup
+          .addTo(map);
+      });
+
     });
 
     this.setState({ map });
@@ -98,8 +145,8 @@ class App extends Component {
   fetchWeather() {
     const self = this;
 
-    let lat = this.state.weatherCoords.lat;
-    let lng = this.state.weatherCoords.lng;
+    let lat = this.state.coords.lat;
+    let lng = this.state.coords.lng;
 
     fetch(`https://hb-weather-server.herokuapp.com/weather/${lat}/${lng}`, {
       method: 'GET',
@@ -109,8 +156,18 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
+        // console.log(res);
+
+        // get the current weather records and add this one. this can be used to find weather
+        // info for popups, so you dont have to re-fetch. 
+        let newWeatherRecords = this.state.weatherRecords.slice();
+
+        // save the location too
+        res.fineLocation = this.state.location;
+        newWeatherRecords.push(res);
+
         self.setState({
+          weatherRecords: newWeatherRecords,
           weatherData: res,
           showWeather: true // show the data once we have it
         });
@@ -119,14 +176,6 @@ class App extends Component {
       .catch((err) => {
         console.log(err)
       });
-  }
-
-  // this is called from within the Weather component, to close the 
-  // weather window
-  toggleShowWeather() {
-    this.setState({
-      showWeather: false
-    })
   }
 
   registerClick(e) {
@@ -173,10 +222,80 @@ class App extends Component {
     // update state 
     this.setState({
       weatherCoords: e.lngLat,
-      points: e.point
     }, () => {
       this.fetchWeather();
     });
+  }
+
+  // this is to show the popup over map markers for previously clicked points
+  showPopup() {
+    let { x, y } = this.state.point;
+    let { lat, lng } = this.state.coords;
+
+    this.setState({
+      popupCoords: {
+        lat, lng, x, y
+      }
+    });
+  }
+
+  hidePopup() {
+    this.setState({
+      popupCoords: null,
+    });
+  }
+
+  renderPopup() {
+    let { lat, lng, x, y } = this.state.popupCoords;
+
+    // get the weather info from the matching record in this.state.weatherRecords
+    let pastRecord = getPastRecord(this.state.weatherRecords, lat, lng);
+    // console.log('pastRecord');
+    // console.log(pastRecord);
+    // console.log(this.state.weatherRecords);
+
+    let divStyle = {
+      height: '150px',
+      width: '150px',
+      position: 'absolute',
+      top: y + 15,
+      left: x - 30,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      borderRadius: '10px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
+    let pStyle = {
+      textAlign: 'center',
+      fontSize: '16px', 
+      fontWeight: 500
+    }
+
+    return (
+      <div style={divStyle}>
+        {!pastRecord ?
+          <p>{`Lat: ${Math.floor(lat)}, Long: ${Math.floor(lng)}`}</p>
+          :
+          <div>
+            <p style={pStyle}>{`${pastRecord.fineLocation}`}</p>
+            <p style={pStyle}>{`${Math.floor(pastRecord.currently.temperature)}`}&deg;F</p>
+            <p style={pStyle}>
+              <i className={getWeatherIcon(pastRecord.currently.icon)}></i>
+            </p>
+          </div>
+        }
+      </div>
+    )
+  }
+
+  // this is called from within the Weather component, to close the 
+  // weather window
+  toggleShowWeather() {
+    this.setState({
+      showWeather: false
+    })
   }
 
   // 
@@ -189,7 +308,12 @@ class App extends Component {
         <div id='map' style={{ width: '100vw', height: '100vh' }}>
 
           {/* the upper left text */}
-          { <Intro coords={this.state.coords} />}
+          {<Intro coords={this.state.coords} />}
+
+          {this.state.popupCoords && this.state.weatherData ?
+            this.renderPopup()
+            : null
+          }
 
         </div>
         <div>
@@ -212,7 +336,8 @@ class App extends Component {
 const styles = {
   container: {
     // margin: '3vw 3vh'
-  }
+  },
+
 }
 
 export default App;
