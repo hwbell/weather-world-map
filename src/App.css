@@ -21,6 +21,17 @@ a {
   cursor: pointer;
 }
 
+::-webkit-scrollbar { 
+  margin: 10px;
+  border-radius: 5px;
+  background-color: rgba(245, 245, 245, 0.3);
+}
+
+::-webkit-scrollbar-thumb { 
+  background-color: whitesmoke;
+  border-radius: 5px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

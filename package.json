@@ -18,6 +18,7 @@
     "react-horizontal-scroll-container": "^1.0.1",
     "react-pose": "^4.0.8",
     "react-scripts": "3.0.0",
+    "react-scrollbar": "^0.5.6",
     "react-test-renderer": "^16.8.6",
     "reactstrap": "^8.0.0"
   },

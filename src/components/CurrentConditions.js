@@ -41,20 +41,23 @@ class CurrentConditions extends Component {
       <div className="row" style={styles.container}>
 
         <div className="" style={styles.infoHolder}>
-          <p style={styles.paragraph}>
-            <i style={styles.icon} className={getWeatherIcon(weather.icon)}></i>
-          </p>
-
-        </div>
-
-        <div className="" style={styles.infoHolder}>
           <p style={styles.temperature}>{weather.temperature}&deg;F</p>
-          <p style={styles.paragraph}>{weather.summary}</p>
           <p style={styles.paragraph}>{`${weather.time}`}</p>
         </div>
 
         <div className="" style={styles.infoHolder}>
-          <p style={styles.paragraph}>{`${weather.humidity}% humidity`}</p>
+          <p style={styles.paragraph}>
+            <i style={styles.icon} className={getWeatherIcon(weather.icon)}></i>
+          </p>
+          <p style={styles.paragraph}>{weather.summary}</p>
+
+        </div>
+
+        <div className="" style={styles.infoHolder}>
+          <p style={styles.paragraph}>{`humidity: ${weather.humidity}%`}</p>
+          <p style={styles.paragraph}>{`precipitation: ${weather.precipProbability} %`}</p>
+          <p style={styles.paragraph}>{`wind: ${Math.floor(weather.windSpeed)} mph`}</p>
+
         </div>
 
       </div>
@@ -73,8 +76,7 @@ const styles = {
   },
   icon: {
     fontSize: '50px',
-    padding: '10px',
-    paddingTop: '20px'
+    paddingBottom: '0px'
     // paddingLeft: '30px'
   },
   infoHolder: {
@@ -93,6 +95,7 @@ const styles = {
     color: 'whitesmoke',
     fontSize: 'calc(8px + 1vw)',
     marginHorizontal: '20px',
+    padding: '0px',
     display: 'inline-block'
     // paddingHorizontal: 12
   }

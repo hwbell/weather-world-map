@@ -48,10 +48,10 @@ const getCurrentData = (currentData) => {
   let minutes = time.getMinutes() < 10 ? '0' + time.getMinutes.toString() : time.getMinutes();
   let notation = time.getHours() > 10 ? ' pm' : ' am';
 
-  let { humidity, icon, summary, temperature, uvIndex, windSpeed } = currentData;
+  let { humidity, icon, summary, temperature, uvIndex, windSpeed, precipProbability } = currentData;
 
   return {
-    humidity, icon, summary, uvIndex, windSpeed,
+    humidity, icon, summary, uvIndex, windSpeed, precipProbability,
     temperature: Math.floor(temperature),
     time: `${hours}:00 ${notation}`,
     date: `${time.getMonth()+1}/${date}/${year}`
@@ -103,7 +103,7 @@ const makeDailyList = (dailyData) => {
     // let year = time.getFullYear().toString();
     let date = time.getDate();
     let month = months[time.getMonth()];
-    let weekday = days[time.getDay()];
+    let weekday = days[time.getDay()].slice(0,3);
 
     condensedList.push({
       temperatureHigh: Math.floor(day.temperatureHigh),
@@ -112,6 +112,7 @@ const makeDailyList = (dailyData) => {
       humidity: day.humidity,
       icon: day.icon,
       windSpeed: day.windSpeed,
+      precipProbability: day.precipProbability,
       date: `${weekday}, ${month} ${date}` 
     });
 
@@ -232,7 +233,7 @@ const styles = {
   },
   switchButton: {
     textDecoration: 'none',
-    fontSize: '20px',
+    fontSize: '16px',
     fontWeight: 'bold',
     marginLeft: '9vw'
   }

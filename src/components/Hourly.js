@@ -55,6 +55,7 @@ class Hourly extends Component {
 
       let style = {
         minWidth: '120px',
+        border: '1px solid rgba(245, 245, 245, 0.2)',
         backgroundColor: '#' + myRainbow.colourAt(weather.temp)
       }
 
@@ -86,8 +87,8 @@ class Hourly extends Component {
     return (
       <Container className="" style={styles.container}>
 
-        <div className="row">
-          <HorizontalScroller>
+        <div className="">
+          <HorizontalScroller style={styles.scroller}>
             {this.props.weatherList &&
               this.renderWeatherInfo()
             }
@@ -102,11 +103,14 @@ class Hourly extends Component {
 
 const styles = {
   container: {
-    // padding: '5vw',
-    // marginBottom: '20px',
-    // margin: '15px'
+    width: '95%',
+    margin: 'auto auto',
   },
-
+  scroller: {
+    overflowX: 'hidden',
+    // margin: '0px',
+    // padding: '0px'
+  },
   temp: {
     textAlign: 'center',
     margin: 5,

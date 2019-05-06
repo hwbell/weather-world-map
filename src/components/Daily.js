@@ -15,6 +15,8 @@ import posed from 'react-pose';
 import { weatherImageList, getWeatherIcon } from '../tools/weatherImages';
 var Rainbow = require('rainbowvis.js');
 
+var ScrollArea = require('react-scrollbar');
+
 // use react-pose for fading in
 const Container = posed.div({
   enter: { staggerChildren: 50 },
@@ -57,6 +59,7 @@ class Hourly extends Component {
         minWidth: '160px',
         padding: 0,
         margin: 0,
+        border: '1px solid rgba(245, 245, 245, 0.2)',
         backgroundColor: '#' + myRainbow.colourAt(weather.temperatureHigh),
         display: 'flex',
         flexDirection: 'column',
@@ -102,8 +105,8 @@ class Hourly extends Component {
 
         {/* <p style={styles.title}>daily</p> */}
 
-        <div className="row">
-          <HorizontalScroller style={styles.scroller}>
+        <div className="" style={{borderRadius: '55px'}}>
+          <HorizontalScroller className="horizontal-scroller" style={styles.scroller}>
             {this.props.weatherList &&
               this.renderWeatherInfo()
             }
@@ -118,12 +121,11 @@ class Hourly extends Component {
 
 const styles = {
   container: {
-    width: '100%'
-    // marginBottom: '20px',
-    // margin: '10px',
+    width: '95%',
+    margin: 'auto auto',
   },
   scroller: {
-    width: '80%'
+    overflowX: 'hidden',
     // margin: '0px',
     // padding: '0px'
   },
@@ -138,10 +140,10 @@ const styles = {
     paddingTop: 5
   },
   highTempText: {
-    fontSize: '24px'
+    fontSize: '20px'
   },
   lowTempText: {
-    fontSize: '18px'
+    fontSize: '14px'
   },
   date: {
     marginTop: '10px'
