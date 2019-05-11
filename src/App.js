@@ -201,8 +201,12 @@ class App extends Component {
 
           let location = displayInfo.join(', ');
 
+          // update state 
           this.setState({
-            location
+            location,
+            weatherCoords: e.lngLat,
+          }, () => {
+            this.fetchWeather();
           });
         }
         else {
@@ -212,19 +216,19 @@ class App extends Component {
           let lng = Math.round(e.lngLat.lng * 100) / 100;
 
           let location = `Latitude: ${lat}, Longitude: ${lng}`;
+
+          // update state 
           this.setState({
-            location
+            location,
+            weatherCoords: e.lngLat,
+          }, () => {
+            this.fetchWeather();
           });
         }
 
       })
 
-    // update state 
-    this.setState({
-      weatherCoords: e.lngLat,
-    }, () => {
-      this.fetchWeather();
-    });
+
   }
 
   // this is to show the popup over map markers for previously clicked points
@@ -269,7 +273,7 @@ class App extends Component {
     }
     let pStyle = {
       textAlign: 'center',
-      fontSize: '16px', 
+      fontSize: '16px',
       fontWeight: 500
     }
 
@@ -310,7 +314,7 @@ class App extends Component {
           {/* the upper left text */}
           {<Intro coords={this.state.coords} />}
 
-          {this.state.popupCoords && this.state.weatherData ?
+          {this.state.popupCoords && this.state.weatherRecords ?
             this.renderPopup()
             : null
           }

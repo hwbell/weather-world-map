@@ -45,8 +45,6 @@ class Hourly extends Component {
     // initalize rainbowvis to color each group dynamically
     var myRainbow = new Rainbow();
 
-    // make a spectrum based on the first temp in the list
-    let temp = this.props.weatherList[0].temp;
     // set range based on data
     myRainbow.setNumberRange(-15, 100);
     myRainbow.setSpectrum('#303F9F', '#FF5722');
