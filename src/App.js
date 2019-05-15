@@ -7,11 +7,18 @@ import 'bootstrap/dist/css/bootstrap.css';
 // components
 import Intro from './components/Intro';
 import Weather from './components/Weather';
+import Loader from 'react-loader-spinner'
 
 // tools
 import mapboxgl from 'mapbox-gl';
 import { weatherImageList, getWeatherIcon, getPastRecord } from './tools/weatherImages';
-import { PoseGroup } from 'react-pose';
+
+// pose animation
+import posed, { PoseGroup } from 'react-pose';
+const Div = posed.div({
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 }
+});
 
 const openGeocoder = require('node-open-geocoder');
 const fetch = require('node-fetch');
@@ -21,6 +28,7 @@ const fetch = require('node-fetch');
 const initialState = {
   weatherCoords: { lng: -104.991531, lat: 39.742243 },
   showWeather: false,
+  showLoading: false,
   location: 'Denver, CO',
   loadingWeather: false,
   weatherRecords: []
@@ -170,7 +178,8 @@ class App extends Component {
         self.setState({
           weatherRecords: newWeatherRecords,
           weatherData: res,
-          showWeather: true // show the data once we have it
+          showWeather: true, // show the data once we have it
+          showLoading: false // hide the loader
         });
 
       })
@@ -180,6 +189,9 @@ class App extends Component {
   }
 
   registerClick(e) {
+    this.setState({
+      showLoading: true
+    });
     // use node-open-geocoder to get location info
     openGeocoder()
       .reverse(e.lngLat.lng, e.lngLat.lat)
@@ -298,11 +310,9 @@ class App extends Component {
   // this is called from within the Weather component, to close the 
   // weather window
   toggleShowWeather() {
-    console.log('closing weather')
     this.setState({
       showWeather: false
     }, () => {
-      console.log('state set')
     })
   }
 
@@ -324,14 +334,31 @@ class App extends Component {
           }
 
         </div>
-          {/* shows when the user clicks on the map */}
+        {/* shows when the user clicks on the map */}
+
+        <PoseGroup>
+
+          {this.state.showLoading &&
+            <Div style={styles.loaderHolder} key="loader">
+              <Loader
+                type="ThreeDots"
+                color="#0000FF"
+                height="120"
+                width="120"
+              />
+            </Div>}
+
           {this.state.showWeather &&
-            <Weather 
-              location={this.state.location}
-              weatherData={this.state.weatherData}
-              coords={this.state.weatherCoords}
-              close={this.toggleShowWeather}
-            />}
+            <Div key="weather">
+              <Weather
+                location={this.state.location}
+                weatherData={this.state.weatherData}
+                coords={this.state.weatherCoords}
+                close={this.toggleShowWeather}
+              />
+            </Div>}
+
+        </PoseGroup>
 
       </div>
     );
@@ -342,6 +369,12 @@ const styles = {
   container: {
     // margin: '3vw 3vh'
   },
+  loaderHolder: {
+    zIndex: 3,
+    position: 'absolute',
+    top: '45%',
+    left: '45%'
+  }
 
 }
 

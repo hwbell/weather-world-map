@@ -18,14 +18,25 @@ import { weatherImageList, getWeatherIcon } from '../tools/weatherImages';
 
 // use react-pose for fading in
 const Div = posed.div({
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 }
+  enter: {
+    y: 0,
+    opacity: 1,
+    delay: 300,
+    transition: {
+      y: { type: 'spring', stiffness: 100, damping: 15 },
+      default: { duration: 300 }
+    }
+  },
+  exit: {
+    y: 50,
+    opacity: 0,
+    transition: { duration: 150 }
+  }
 });
 
-const P = posed.div({
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 }
-});
+// can just make it empty if you only want it to follow the other animations
+// but not animate itself
+const P = posed.p({});
 
 // need arrays of Months and Days to get names
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -54,7 +65,7 @@ const getCurrentData = (currentData) => {
     humidity, icon, summary, uvIndex, windSpeed, precipProbability,
     temperature: Math.floor(temperature),
     time: `${hours}:00 ${notation}`,
-    date: `${time.getMonth()+1}/${date}/${year}`
+    date: `${time.getMonth() + 1}/${date}/${year}`
   };
 }
 
@@ -103,7 +114,7 @@ const makeDailyList = (dailyData) => {
     // let year = time.getFullYear().toString();
     let date = time.getDate();
     let month = months[time.getMonth()];
-    let weekday = days[time.getDay()].slice(0,3);
+    let weekday = days[time.getDay()].slice(0, 3);
 
     condensedList.push({
       temperatureHigh: Math.floor(day.temperatureHigh),
@@ -113,7 +124,7 @@ const makeDailyList = (dailyData) => {
       icon: day.icon,
       windSpeed: day.windSpeed,
       precipProbability: day.precipProbability,
-      date: `${weekday}, ${month} ${date}` 
+      date: `${weekday}, ${month} ${date}`
     });
 
   });
@@ -141,6 +152,7 @@ class Weather extends Component {
 
   // for the toggle between hourly and daily
   handleSwitch() {
+    console.log(this.state.showDaily, this.state.showHourly)
     this.setState({
       showDaily: !this.state.showDaily,
       showHourly: !this.state.showHourly
@@ -160,7 +172,7 @@ class Weather extends Component {
 
     // change the summary based on hourly vs. daily
     let summary = this.state.showDaily ? data.daily.summary : data.hourly.summary;
-    
+
     return (
 
       <Div style={styles.container}>
@@ -188,17 +200,18 @@ class Weather extends Component {
         <PoseGroup>
           <Div key={'hourly'}>
             {/* the hourly weather tabs  */}
-            {this.state.showHourly && <Hourly weatherList={hourlyWeather} />}
+            {this.state.showHourly && <Hourly key={'hourly'} weatherList={hourlyWeather} />}
+
+            {/* the daily weather tabs */}
+            {this.state.showDaily && <Daily key={'daily'} weatherList={dailyWeather} />}
           </Div>
 
-          <Div key={'daily'}>
-            {/* the daily weather tabs */}
-            {this.state.showDaily && <Daily weatherList={dailyWeather} />}
-          </Div>
+          {/* short summary */}
+          <P key="text" style={styles.subtitle}>{summary}</P>
+        
         </PoseGroup>
 
-        {/* short summary */}
-        <p style={styles.subtitle}>{summary}</p>
+
 
       </Div>
     );
