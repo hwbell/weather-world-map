@@ -341,10 +341,10 @@ class App extends Component {
           {this.state.showLoading &&
             <Div style={styles.loaderHolder} key="loader">
               <Loader
+                height={100}
+                width={100}
                 type="ThreeDots"
                 color="#0000FF"
-                height="120"
-                width="120"
               />
             </Div>}
 
@@ -372,8 +372,8 @@ const styles = {
   loaderHolder: {
     zIndex: 3,
     position: 'absolute',
-    top: '45%',
-    left: '45%'
+    top: `calc(50vh - 50px)`,
+    left: `calc(50vw - 50px)`
   }
 
 }
