@@ -148,7 +148,6 @@ class Weather extends Component {
   }
 
   render() {
-    const isVisible = this.props.showWeather;
     const data = this.props.weatherData;
 
     // make condensed lists to pass to the CurrentConditions, Hourly, Daily components
@@ -161,10 +160,10 @@ class Weather extends Component {
 
     // change the summary based on hourly vs. daily
     let summary = this.state.showDaily ? data.daily.summary : data.hourly.summary;
-
+    
     return (
 
-      <Div pose={isVisible ? 'visible' : 'hidden'} style={styles.container}>
+      <Div style={styles.container}>
 
         <Button color='link' onClick={this.props.close} className="float-right">
           <i style={styles.icon} className="fas fa-times-circle"></i>
@@ -212,18 +211,20 @@ const styles = {
     borderRadius: '25px',
     zIndex: 2,
     position: 'absolute',
-    top: '10%',
+    top: '15%',
     left: '5%',
-    height: '90%',
+    // height: '70%',
     width: '90%',
   },
   icon: {
+    marginTop: '7px',
     fontSize: '24px'
   },
   title: {
     // fontWeight: 'bold',
     color: 'whitesmoke',
     fontSize: 'calc(14px + 1vw)',
+    margin: '2vw',
     marginLeft: '5vw',
     padding: '10px'
   },

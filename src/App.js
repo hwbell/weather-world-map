@@ -11,6 +11,7 @@ import Weather from './components/Weather';
 // tools
 import mapboxgl from 'mapbox-gl';
 import { weatherImageList, getWeatherIcon, getPastRecord } from './tools/weatherImages';
+import { PoseGroup } from 'react-pose';
 
 const openGeocoder = require('node-open-geocoder');
 const fetch = require('node-fetch');
@@ -297,8 +298,11 @@ class App extends Component {
   // this is called from within the Weather component, to close the 
   // weather window
   toggleShowWeather() {
+    console.log('closing weather')
     this.setState({
       showWeather: false
+    }, () => {
+      console.log('state set')
     })
   }
 
@@ -320,17 +324,14 @@ class App extends Component {
           }
 
         </div>
-        <div>
           {/* shows when the user clicks on the map */}
           {this.state.showWeather &&
-            <Weather
+            <Weather 
               location={this.state.location}
               weatherData={this.state.weatherData}
               coords={this.state.weatherCoords}
-              showWeather={this.state.showWeather}
               close={this.toggleShowWeather}
             />}
-        </div>
 
       </div>
     );
