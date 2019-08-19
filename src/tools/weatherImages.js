@@ -42,27 +42,7 @@ const getWeatherIcon = (iconId) => {
   return weatherImagesList[iconId].icon;
 }
 
-// this takes the weatherRecords, and the current lat / lng of the mouse and returns 
-// a matchinf past record. This is for the popups
-const getPastRecord = (weatherRecords, lat, lng) => {
-
-  let pastRecord;
-  weatherRecords.forEach((record, i) => {
-
-    let lngsMatch = Math.abs(record.longitude - lng) < 1;
-    let latsMatch = Math.abs(record.latitude - lat) < 1;
-
-    if (latsMatch && lngsMatch) {
-      pastRecord = record;
-    }
-
-  });
-
-  return pastRecord;
-}
-
 module.exports = {
   weatherImagesList,
   getWeatherIcon,
-  getPastRecord
 }

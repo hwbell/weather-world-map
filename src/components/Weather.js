@@ -181,7 +181,7 @@ class Weather extends Component {
           <i style={styles.icon} className="fas fa-times-circle"></i>
         </Button>
 
-        <p style={styles.title}>{this.props.location}</p>
+        <p style={styles.title}>{this.props.weatherData.fineLocation}</p>
 
 
         {/* the current conditions */}

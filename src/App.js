@@ -11,7 +11,7 @@ import Loader from 'react-loader-spinner'
 
 // tools
 import mapboxgl from 'mapbox-gl';
-import { weatherImageList, getWeatherIcon, getPastRecord } from './tools/weatherImages';
+import { getWeatherIcon } from './tools/weatherImages';
 
 // pose animation
 import posed, { PoseGroup } from 'react-pose';
@@ -31,7 +31,9 @@ const initialState = {
   showLoading: false,
   location: 'Denver, CO',
   loadingWeather: false,
-  weatherRecords: []
+  weatherRecords: [],
+  popups: [],
+  pointerHovering: false
 }
 
 class App extends Component {
@@ -46,7 +48,7 @@ class App extends Component {
     this.toggleShowWeather = this.toggleShowWeather.bind(this);
     this.registerClick = this.registerClick.bind(this);
     this.toggleView = this.registerClick.bind(this);
-    this.showPopup = this.showPopup.bind(this);
+    this.renderPopup = this.renderPopup.bind(this);
   }
 
   componentDidMount() {
@@ -80,7 +82,13 @@ class App extends Component {
 
     // handle the user clicking the map
     map.on('click', function (e) {
-      console.log(e)
+
+      // use the pointerHovering boolean to determine wether or not to disable the map
+      // click
+      if (self.state.pointerHovering) {
+        return;
+      }
+
       // get the weather
       self.registerClick(e);
 
@@ -96,28 +104,49 @@ class App extends Component {
                 lat: e.lngLat.lat
               },
               point: e.point
-            },
-            properties: {
-              title: 'Mapbox',
-              description: 'Washington, D.C.'
             }
-          },
+          }
         ]
       };
 
-      // add markers to map
+      // add marker to map
       geojson.features.forEach(function (marker) {
 
         // create a HTML element for each feature
         var el = document.createElement('i');
         el.className = 'marker fas fa-map-marker-alt';
         el.onmouseover = () => {
-          let point = marker.geometry.point;
-          let coords = marker.geometry.coordinates;
-          self.showPopup(point, coords);
+          // let point = marker.geometry.point;
+          // let coords = marker.geometry.coordinates;
+          self.setState({
+            marker,
+            pointerHovering: true
+          }, () => {
+            self.renderPopup();
+          })
+
         }
         el.onmouseleave = () => {
           self.hidePopup();
+          self.setState({
+            pointerHovering: false
+          })
+        }
+        el.onclick = () => {
+          // console.log("clicked on pointer")
+
+          // e.preventDefault();
+          let { lat, lng } = marker.geometry.coordinates;
+
+          let pastRecord = self.state.weatherRecords.find((el) => {
+            // console.log(el.lng, lng, el.lat,  lat)
+            return el.longitude === lng && el.latitude === lat
+          })
+          self.setState({
+            weatherData: pastRecord,
+            showWeather: true,
+          })
+          // console.log(pastRecord)
         }
         // make a marker for each feature and add to the map
         new mapboxgl.Marker(el)
@@ -131,70 +160,20 @@ class App extends Component {
     this.setState({ map });
   }
 
-  // switch between map and satellite
-  toggleView() {
-    let satellite = 'mapbox://styles/mapbox/satellite-v9';
-    let map = 'mapbox://styles/hwbell/cjuvfzqlt4h141fomxbjysorm';
-    let newMap = JSON.parse(JSON.stringify(this.state.map));
-
-    if (this.state.map.style === map) {
-      newMap.setStyle(satellite);
-    } else {
-      newMap.setStyle(map);
-    }
-
-    this.setState({
-      map: newMap
-    })
-
-  }
-
-  // get the weather json to be passed to the Weather component from our node backend,
-  // which will actually make the request to darksky
-  fetchWeather() {
-    const self = this;
-
-    let lat = this.state.coords.lat;
-    let lng = this.state.coords.lng;
-
-    fetch(`https://hb-weather-server.herokuapp.com/weather/${lat}/${lng}`, {
-      method: 'GET',
-      headers: {
-        "Content-type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
-        // console.log(res);
-
-        // get the current weather records and add this one. this can be used to find weather
-        // info for popups, so you dont have to re-fetch. 
-        let newWeatherRecords = this.state.weatherRecords.slice();
-
-        // save the location too
-        res.fineLocation = this.state.location;
-        newWeatherRecords.push(res);
-
-        self.setState({
-          weatherRecords: newWeatherRecords,
-          weatherData: res,
-          showWeather: true, // show the data once we have it
-          showLoading: false // hide the loader
-        });
-
-      })
-      .catch((err) => {
-        console.log(err)
-      });
-  }
-
   registerClick(e) {
+
+    // console.log("clicked on map")
+    let { lng, lat } = e.lngLat;
+
     this.setState({
+      clickedCoords: {
+        lng, lat
+      },
       showLoading: true
     });
     // use node-open-geocoder to get location info
     openGeocoder()
-      .reverse(e.lngLat.lng, e.lngLat.lat)
+      .reverse(lng, lat)
       .end((err, res) => {
         if (err) {
           console.log(err);
@@ -244,67 +223,162 @@ class App extends Component {
 
   }
 
-  // this is to show the popup over map markers for previously clicked points
-  showPopup() {
-    let { x, y } = this.state.point;
-    let { lat, lng } = this.state.coords;
 
-    this.setState({
-      popupCoords: {
-        lat, lng, x, y
+  // get the weather json to be passed to the Weather component from our node backend,
+  // which will actually make the request to darksky
+  fetchWeather() {
+    const self = this;
+
+    let lat = this.state.clickedCoords.lat;
+    let lng = this.state.clickedCoords.lng;
+
+    fetch(`https://hb-weather-server.herokuapp.com/weather/${lat}/${lng}`, {
+      method: 'GET',
+      headers: {
+        "Content-type": "application/json"
       }
-    });
+    })
+      .then(res => res.json())
+      .then(res => {
+        // console.log(res);
+
+        // get the current weather records and add this one. this can be used to find weather
+        // info for popups, so you dont have to re-fetch. 
+        let newWeatherRecords = this.state.weatherRecords.slice();
+
+        // save the location too
+        res.fineLocation = this.state.location;
+        res.coordinates = {
+          lat, lng
+        };
+
+        newWeatherRecords.push(res);
+
+        self.setState({
+          weatherRecords: newWeatherRecords,
+          weatherData: res,
+          showWeather: true, // show the data once we have it
+          showLoading: false // hide the loader
+        }, () => {
+          // console.log(this.state.weatherRecords)
+        });
+
+      })
+      .catch((err) => {
+        console.log(err)
+      });
   }
 
+  // // this is to show the popup over map markers for previously clicked points
+  // showPopup() {
+  //   let { x, y } = this.state.point;
+  //   let { lat, lng } = this.state.coords;
+
+  //   this.setState({
+  //     popupCoords: {
+  //       lat, lng, x, y
+  //     }
+  //   });
+  // }
+
+  // to delete popup
+  removePopup() {
+
+  }
+
+  // when the user moves away from the popup
   hidePopup() {
     this.setState({
-      popupCoords: null,
+      marker: null,
     });
   }
 
   renderPopup() {
-    let { lat, lng, x, y } = this.state.popupCoords;
+    // console.log(this.state.marker)
+
+    let { lat, lng } = this.state.marker.geometry.coordinates;
+    let { x, y } = this.state.point;
+
+    // console.log(lat, lng, x, y);
+
+    let { weatherRecords } = this.state;
+
+    // console.log(weatherRecords)
 
     // get the weather info from the matching record in this.state.weatherRecords
-    let pastRecord = getPastRecord(this.state.weatherRecords, lat, lng);
+    let pastRecord = weatherRecords.find((el) => {
+      // console.log(el.lng === lng, el.lat === lat)
+      return el.longitude === lng && el.latitude === lat
+    })
     // console.log('pastRecord');
     // console.log(pastRecord);
-    // console.log(this.state.weatherRecords);
 
-    let divStyle = {
-      height: '150px',
-      width: '150px',
-      position: 'absolute',
-      top: y + 15,
-      left: x - 30,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      borderRadius: '10px',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }
-    let pStyle = {
-      textAlign: 'center',
-      fontSize: '16px',
-      fontWeight: 500
+    if (pastRecord) {
+      let divStyle = {
+        // height: '150px',
+        // width: '150px',
+        position: 'absolute',
+        top: y + 15,
+        left: x - 30,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        borderRadius: '10px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }
+      let pStyle = {
+        margin: '4px',
+        textAlign: 'center',
+        fontSize: '16px',
+        fontWeight: 500
+      }
+
+      let { humidity, icon, summary, temperature,
+        uvIndex, windSpeed, precipProbability } = pastRecord.currently;
+
+
+
+      return (
+        <div style={divStyle}>
+          {!pastRecord ?
+            <p>{`Lat: ${Math.floor(lat)}, Long: ${Math.floor(lng)}`}</p>
+            :
+            <div style={{ padding: '10px' }}>
+              <p style={pStyle}>{`${pastRecord.fineLocation}`}</p>
+
+              <div className="space-all-row">
+
+                <div>
+                  <p style={pStyle}>{summary}</p>
+                </div>
+
+                <div>
+                  <div className="center-all-row">
+                    <p style={pStyle}>{`${Math.floor(temperature)}`}&deg;F</p>
+                    <p style={pStyle}>
+                      <i className={getWeatherIcon(icon)} style={{ fontSize: '14px' }}></i>
+                    </p>
+                  </div>
+
+                  <div className="center-all-row">
+                    <p style={pStyle}>{`${precipProbability}%`}</p>
+                    <p style={pStyle}>
+                      <i className="fas fa-cloud-rain" style={{ fontSize: '10px' }}></i>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          }
+        </div>
+      )
+    } else {
+      return null;
     }
 
-    return (
-      <div style={divStyle}>
-        {!pastRecord ?
-          <p>{`Lat: ${Math.floor(lat)}, Long: ${Math.floor(lng)}`}</p>
-          :
-          <div>
-            <p style={pStyle}>{`${pastRecord.fineLocation}`}</p>
-            <p style={pStyle}>{`${Math.floor(pastRecord.currently.temperature)}`}&deg;F</p>
-            <p style={pStyle}>
-              <i className={getWeatherIcon(pastRecord.currently.icon)}></i>
-            </p>
-          </div>
-        }
-      </div>
-    )
   }
 
   // this is called from within the Weather component, to close the 
@@ -314,6 +388,24 @@ class App extends Component {
       showWeather: false
     }, () => {
     })
+  }
+
+  // switch between map and satellite
+  toggleView() {
+    let satellite = 'mapbox://styles/mapbox/satellite-v9';
+    let map = 'mapbox://styles/hwbell/cjuvfzqlt4h141fomxbjysorm';
+    let newMap = JSON.parse(JSON.stringify(this.state.map));
+
+    if (this.state.map.style === map) {
+      newMap.setStyle(satellite);
+    } else {
+      newMap.setStyle(map);
+    }
+
+    this.setState({
+      map: newMap
+    })
+
   }
 
   // 
@@ -328,7 +420,7 @@ class App extends Component {
           {/* the upper left text */}
           {<Intro coords={this.state.coords} />}
 
-          {this.state.popupCoords && this.state.weatherRecords ?
+          {this.state.marker && this.state.weatherRecords ?
             this.renderPopup()
             : null
           }
@@ -353,7 +445,7 @@ class App extends Component {
               <Weather
                 location={this.state.location}
                 weatherData={this.state.weatherData}
-                coords={this.state.weatherCoords}
+                // coords={this.state.weatherCoords}
                 close={this.toggleShowWeather}
               />
             </Div>}
