@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^4.4.1",
     "bootstrap": "^4.3.1",
     "cities": "^2.0.0",
     "enzyme": "^3.0.0",
@@ -17,10 +18,12 @@
     "react-dom": "^16.8.6",
     "react-horizontal-scroll-container": "^1.0.1",
     "react-loader-spinner": "^2.3.0",
+    "react-media": "^1.9.2",
     "react-pose": "^4.0.8",
     "react-scripts": "3.0.0",
     "react-scrollbar": "^0.5.6",
     "react-test-renderer": "^16.8.6",
+    "react-window-size": "^1.2.2",
     "reactstrap": "^8.0.0"
   },
   "scripts": {

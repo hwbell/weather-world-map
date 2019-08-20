@@ -10,7 +10,9 @@ import Weather from './components/Weather';
 import Loader from 'react-loader-spinner'
 
 // tools
+import windowSize from 'react-window-size';
 import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { getWeatherIcon } from './tools/weatherImages';
 
 // pose animation
@@ -33,7 +35,8 @@ const initialState = {
   loadingWeather: false,
   weatherRecords: [],
   popups: [],
-  pointerHovering: false
+  pointerHovering: false,
+  enableMapClick: true
 }
 
 class App extends Component {
@@ -54,6 +57,9 @@ class App extends Component {
   componentDidMount() {
     // render the map once mounted
     this.renderMap();
+    this.setState({
+      enableMapClick: true
+    })
   }
 
   // show public map with the publishing code from mapbox
@@ -70,7 +76,24 @@ class App extends Component {
       zoom: 5,
       style: 'mapbox://styles/hwbell/cjuvfzqlt4h141fomxbjysorm',
     });
-    map.addControl(new mapboxgl.NavigationControl());
+
+    var nav = new mapboxgl.NavigationControl();
+    map.addControl(nav, 'bottom-left');
+    map.addControl(new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+
+      trackUserLocation: true,
+      // style: {
+      //   margin: '20px'
+      // }
+    }), 'bottom-left');
+    map.addControl(new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl
+    }));
+
     map.on('mousemove', function (e) {
       // save the state of the mouse in lat, lng (coords) and  x,y (points) 
       self.setState({
@@ -83,9 +106,11 @@ class App extends Component {
     // handle the user clicking the map
     map.on('click', function (e) {
 
-      // use the pointerHovering boolean to determine wether or not to disable the map
-      // click
-      if (self.state.pointerHovering) {
+      // use the pointerHovering and mapEnabled booleans to determine wether or not to short
+      // circuit the map click. 
+      // enableMapClick is turned off during weather fetches so the user can't click like crazy and
+      // break the app
+      if (self.state.pointerHovering || !self.state.enableMapClick) {
         return;
       }
 
@@ -135,6 +160,11 @@ class App extends Component {
         el.onclick = () => {
           // console.log("clicked on pointer")
 
+          // short circuit if there aren't any records yet
+          if (!self.state.weatherRecords.length) {
+            return;
+          }
+
           // e.preventDefault();
           let { lat, lng } = marker.geometry.coordinates;
 
@@ -161,6 +191,11 @@ class App extends Component {
   }
 
   registerClick(e) {
+
+    // turn the map off so we don't have multiple fetches from rapid clicking
+    this.setState({
+      enableMapClick: false
+    })
 
     // console.log("clicked on map")
     let { lng, lat } = e.lngLat;
@@ -260,7 +295,9 @@ class App extends Component {
           showWeather: true, // show the data once we have it
           showLoading: false // hide the loader
         }, () => {
-          // console.log(this.state.weatherRecords)
+          this.setState({
+            enableMapClick: true
+          })
         });
 
       })
@@ -293,6 +330,9 @@ class App extends Component {
     });
   }
 
+  // the popup for a dropped pin will use this.state.marker
+  // and this.state.weatherRecords to find the matching coordinates and 
+  // show a little weather info
   renderPopup() {
     // console.log(this.state.marker)
 
@@ -362,7 +402,7 @@ class App extends Component {
                   </div>
 
                   <div className="center-all-row">
-                    <p style={pStyle}>{`${precipProbability}%`}</p>
+                    <p style={pStyle}>{`${precipProbability * 100}%`}</p>
                     <p style={pStyle}>
                       <i className="fas fa-cloud-rain" style={{ fontSize: '10px' }}></i>
                     </p>
@@ -410,12 +450,26 @@ class App extends Component {
 
   // 
   render() {
+    console.log(this.props.windowWidth)
+    let mapStyle = {
+      width: '100vw',
+      height: this.props.windowWidth < 600 ? '88vh' : '92vh'
+    }
+
+    let bottomStyle = {
+      backgroundColor: 'rgba(0,0,0,0.8)',
+      width: '100vw',
+      height: this.props.windowWidth < 600 ? '12vh' : '8vh'
+    }
 
     return (
       <div style={styles.container}>
 
+        {/* globe icon */}
+        <i className="fas fa-globe-americas"></i>
+
         {/* the map itself */}
-        <div id='map' style={{ width: '100vw', height: '100vh' }}>
+        <div id="map" style={mapStyle}>
 
           {/* the upper left text */}
           {<Intro coords={this.state.coords} />}
@@ -424,6 +478,7 @@ class App extends Component {
             this.renderPopup()
             : null
           }
+
 
         </div>
         {/* shows when the user clicks on the map */}
@@ -452,6 +507,15 @@ class App extends Component {
 
         </PoseGroup>
 
+        <div className="center-all-col" style={bottomStyle}>
+          <a target="_blank"
+            href="https://darksky.net/dev"
+            alt="link to darksky">powered by DarkSky API</a>
+          <a target="_blank"
+            href="https://www.mapbox.com/"
+            alt="link to darksky">powered by mapbox</a>
+        </div>
+
       </div>
     );
   }
@@ -466,8 +530,8 @@ const styles = {
     position: 'absolute',
     top: `calc(50vh - 50px)`,
     left: `calc(50vw - 50px)`
-  }
+  },
 
 }
 
-export default App;
+export default windowSize(App);

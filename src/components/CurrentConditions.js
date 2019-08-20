@@ -54,8 +54,8 @@ class CurrentConditions extends Component {
         </div>
 
         <div className="" style={styles.infoHolder}>
-          <p style={styles.paragraph}>{`humidity: ${weather.humidity}%`}</p>
-          <p style={styles.paragraph}>{`precipitation: ${weather.precipProbability} %`}</p>
+          <p style={styles.paragraph}>{`humidity: ${Math.floor(weather.humidity*100)}%`}</p>
+          <p style={styles.paragraph}>{`precipitation: ${Math.floor(weather.precipProbability*100)} %`}</p>
           <p style={styles.paragraph}>{`wind: ${Math.floor(weather.windSpeed)} mph`}</p>
 
         </div>

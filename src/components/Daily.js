@@ -15,7 +15,6 @@ import posed from 'react-pose';
 import { weatherImageList, getWeatherIcon } from '../tools/weatherImages';
 var Rainbow = require('rainbowvis.js');
 
-var ScrollArea = require('react-scrollbar');
 
 // use react-pose for fading in
 const Container = posed.div({
@@ -49,16 +48,17 @@ class Hourly extends Component {
 
     // make a spectrum based on the first temp in the list
     let temp = this.props.weatherList[0].temperatureHigh;
-    // set range based on data
-    myRainbow.setNumberRange(-15, 100);
-    myRainbow.setSpectrum('#303F9F', '#FF5722');
+
+    // set range based on some extreme temps
+    myRainbow.setNumberRange(-30, 120);
+    myRainbow.setSpectrum('#3F51B5', '#FF5722');
 
     let hourlyContainers = this.props.weatherList.map((weather, i) => {
 
       let style = {
-        minWidth: '160px',
-        padding: 0,
-        margin: 0,
+        minWidth: '120px',
+        // padding: 0,
+        // margin: 0,
         border: '1px solid rgba(245, 245, 245, 0.2)',
         backgroundColor: '#' + myRainbow.colourAt(weather.temperatureHigh),
         display: 'flex',
@@ -76,11 +76,11 @@ class Hourly extends Component {
           </div>
 
           {/* the temp and icon */}
-          <div className="row">
-            <div className="col">
+          <div className="left-all-row">
+            <div className="">
               <i style={styles.icon} className={getWeatherIcon(weather.icon)}></i>
             </div>
-            <div className="col">
+            <div className="">
               <p style={styles.highTempText}>{weather.temperatureHigh} &deg;F</p>
               <p style={styles.lowTempText}>{weather.temperatureLow} &deg;F</p>
             </div>
@@ -105,7 +105,7 @@ class Hourly extends Component {
 
         {/* <p style={styles.title}>daily</p> */}
 
-        <div className="" style={{borderRadius: '55px'}}>
+        <div className="" style={{borderRadius: '6px'}}>
           <HorizontalScroller className="horizontal-scroller" style={styles.scroller}>
             {this.props.weatherList &&
               this.renderWeatherInfo()
@@ -121,7 +121,7 @@ class Hourly extends Component {
 
 const styles = {
   container: {
-    width: '95%',
+    width: '90%',
     margin: 'auto auto',
   },
   scroller: {
@@ -135,12 +135,12 @@ const styles = {
     alignSelf: 'flex-start'
   },
   icon: {
-    fontSize: '45px',
+    fontSize: '25px',
     padding: 10,
     paddingTop: 5
   },
   highTempText: {
-    fontSize: '20px'
+    fontSize: '16px'
   },
   lowTempText: {
     fontSize: '14px'
@@ -150,15 +150,14 @@ const styles = {
   },
   text: {
     textAlign: 'center',
-    minWidth: '50px',
     paddingHorizontal: 10,
-    fontSize: '18px',
+    fontSize: '14px',
     fontWeight: 'bold'
   },
   paragraph: {
     textAlign: 'left',
-    margin: '8px',
-    marginTop: '20px',
+    margin: '4px',
+    // marginTop: '20px',
     fontSize: '14px',
   }
 }

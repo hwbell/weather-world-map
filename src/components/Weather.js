@@ -57,7 +57,7 @@ const getCurrentData = (currentData) => {
 
   let hours = time.getHours() > 12 ? time.getHours() - 11 : time.getHours() + 1;
   let minutes = time.getMinutes() < 10 ? '0' + time.getMinutes.toString() : time.getMinutes();
-  let notation = time.getHours() > 10 ? ' pm' : ' am';
+  let notation = time.getHours() > 11 ? ' pm' : ' am';
 
   let { humidity, icon, summary, temperature, uvIndex, windSpeed, precipProbability } = currentData;
 
@@ -84,8 +84,8 @@ const makeHourlyList = (hourlyData) => {
     let date = time.getDate();
     let month = months[time.getMonth()];
 
-    let hours = time.getHours() > 12 ? time.getHours() - 11 : time.getHours() + 1;
-    let notation = time.getHours() > 10 ? ' pm' : ' am';
+    let hours = time.getHours() > 12 ? time.getHours() - 12 : time.getHours();
+    let notation = time.getHours() > 12 ? ' pm' : ' am';
 
     condensedList.push({
       desc: hour.summary,
@@ -220,7 +220,7 @@ class Weather extends Component {
 
 const styles = {
   container: {
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: 'rgba(0,0,0,0.85)',
     borderRadius: '25px',
     zIndex: 2,
     position: 'absolute',

@@ -46,8 +46,8 @@ class Hourly extends Component {
     var myRainbow = new Rainbow();
 
     // set range based on data
-    myRainbow.setNumberRange(-15, 100);
-    myRainbow.setSpectrum('#303F9F', '#FF5722');
+    myRainbow.setNumberRange(-50, 110);
+    myRainbow.setSpectrum('#3F51B5', '#FF5722');
 
     let hourlyContainers = this.props.weatherList.map((weather, i) => {
 
@@ -112,15 +112,16 @@ const styles = {
   temp: {
     textAlign: 'center',
     margin: 5,
-    fontSize: '24px'
+    fontSize: '16px'
   },
   icon: {
-    fontSize: '40px',
+    fontSize: '30px',
     textAlign: 'center',
     padding: '15px',
     paddingTop: '10px'
   },
   text: {
+    fontSize: '14px',
     textAlign: 'center',
     paddingHorizontal: 10
   }
