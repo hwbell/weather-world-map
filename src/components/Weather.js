@@ -55,10 +55,13 @@ const getCurrentData = (currentData) => {
   let date = time.getDate();
   let month = months[time.getMonth()];
 
-  let hours = time.getHours() > 12 ? time.getHours() - 11 : time.getHours() + 1;
-  let minutes = time.getMinutes() < 10 ? '0' + time.getMinutes.toString() : time.getMinutes();
+  let hours = time.getHours() > 12 ? time.getHours() - 12 : time.getHours();
   let notation = time.getHours() > 11 ? ' pm' : ' am';
 
+  if (hours === 0) {
+    hours = 12;
+  }
+  
   let { humidity, icon, summary, temperature, uvIndex, windSpeed, precipProbability } = currentData;
 
   return {
@@ -85,8 +88,11 @@ const makeHourlyList = (hourlyData) => {
     let month = months[time.getMonth()];
 
     let hours = time.getHours() > 12 ? time.getHours() - 12 : time.getHours();
-    let notation = time.getHours() > 12 ? ' pm' : ' am';
+    let notation = time.getHours() > 11 ? ' pm' : ' am';
 
+    if (hours === 0) {
+      hours = 12;
+    }
     condensedList.push({
       desc: hour.summary,
       icon: hour.icon,
@@ -208,7 +214,7 @@ class Weather extends Component {
 
           {/* short summary */}
           <P key="text" style={styles.subtitle}>{summary}</P>
-        
+
         </PoseGroup>
 
 
