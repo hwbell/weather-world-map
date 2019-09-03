@@ -86,6 +86,7 @@ const makeHourlyList = (hourlyData) => {
     let year = time.getFullYear().toString().slice(0, 2);
     let date = time.getDate();
     let month = months[time.getMonth()];
+    let weekday = days[time.getDay()].slice(0, 3);
 
     let hours = time.getHours() > 12 ? time.getHours() - 12 : time.getHours();
     let notation = time.getHours() > 11 ? ' pm' : ' am';
@@ -98,7 +99,7 @@ const makeHourlyList = (hourlyData) => {
       icon: hour.icon,
       temp: Math.floor(hour.temperature),
       time: `${hours}:00 ${notation}`,
-      date: `${month} ${date}`
+      date: `${weekday.slice(0,3)}, ${month.slice(0,3)} ${date}`
     });
 
   });
@@ -130,7 +131,7 @@ const makeDailyList = (dailyData) => {
       icon: day.icon,
       windSpeed: day.windSpeed,
       precipProbability: day.precipProbability,
-      date: `${weekday}, ${month} ${date}`
+      date: `${weekday.slice(0,3)}, ${month.slice(0,3)} ${date}`
     });
 
   });
